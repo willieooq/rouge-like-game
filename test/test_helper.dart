@@ -1,6 +1,7 @@
 // 測試用的工廠類，類似Java測試中的TestDataBuilder
 import 'package:rouge_project/models/battle/battle_state.dart';
 import 'package:rouge_project/models/character/character.dart';
+import 'package:rouge_project/models/character/mastery.dart';
 import 'package:rouge_project/models/skill/skill.dart';
 
 class TestDataBuilder {
@@ -16,8 +17,7 @@ class TestDataBuilder {
     return Character(
       id: id,
       name: name,
-      maxCost: maxCost,
-      currentCost: currentCost,
+      mastery: Mastery.fire,
       attackPower: attackPower,
       skillIds: skillIds,
     );

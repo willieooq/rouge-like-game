@@ -15,8 +15,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Character {
 
+/// 角色ID Unique identifier for the character
  String get id;// required = @NonNull
- String get name; int get maxCost; int get currentCost; int get attackPower; List<String> get skillIds;
+/// 角色名稱 可供玩家任意命名
+ String get name; Mastery get mastery; int get attackPower; List<String> get skillIds;
 /// Create a copy of Character
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +31,16 @@ $CharacterCopyWith<Character> get copyWith => _$CharacterCopyWithImpl<Character>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Character&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.maxCost, maxCost) || other.maxCost == maxCost)&&(identical(other.currentCost, currentCost) || other.currentCost == currentCost)&&(identical(other.attackPower, attackPower) || other.attackPower == attackPower)&&const DeepCollectionEquality().equals(other.skillIds, skillIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Character&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mastery, mastery) || other.mastery == mastery)&&(identical(other.attackPower, attackPower) || other.attackPower == attackPower)&&const DeepCollectionEquality().equals(other.skillIds, skillIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,maxCost,currentCost,attackPower,const DeepCollectionEquality().hash(skillIds));
+int get hashCode => Object.hash(runtimeType,id,name,mastery,attackPower,const DeepCollectionEquality().hash(skillIds));
 
 @override
 String toString() {
-  return 'Character(id: $id, name: $name, maxCost: $maxCost, currentCost: $currentCost, attackPower: $attackPower, skillIds: $skillIds)';
+  return 'Character(id: $id, name: $name, mastery: $mastery, attackPower: $attackPower, skillIds: $skillIds)';
 }
 
 
@@ -49,7 +51,7 @@ abstract mixin class $CharacterCopyWith<$Res>  {
   factory $CharacterCopyWith(Character value, $Res Function(Character) _then) = _$CharacterCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, int maxCost, int currentCost, int attackPower, List<String> skillIds
+ String id, String name, Mastery mastery, int attackPower, List<String> skillIds
 });
 
 
@@ -66,13 +68,12 @@ class _$CharacterCopyWithImpl<$Res>
 
 /// Create a copy of Character
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? maxCost = null,Object? currentCost = null,Object? attackPower = null,Object? skillIds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? mastery = null,Object? attackPower = null,Object? skillIds = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,maxCost: null == maxCost ? _self.maxCost : maxCost // ignore: cast_nullable_to_non_nullable
-as int,currentCost: null == currentCost ? _self.currentCost : currentCost // ignore: cast_nullable_to_non_nullable
-as int,attackPower: null == attackPower ? _self.attackPower : attackPower // ignore: cast_nullable_to_non_nullable
+as String,mastery: null == mastery ? _self.mastery : mastery // ignore: cast_nullable_to_non_nullable
+as Mastery,attackPower: null == attackPower ? _self.attackPower : attackPower // ignore: cast_nullable_to_non_nullable
 as int,skillIds: null == skillIds ? _self.skillIds : skillIds // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  int maxCost,  int currentCost,  int attackPower,  List<String> skillIds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  Mastery mastery,  int attackPower,  List<String> skillIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Character() when $default != null:
-return $default(_that.id,_that.name,_that.maxCost,_that.currentCost,_that.attackPower,_that.skillIds);case _:
+return $default(_that.id,_that.name,_that.mastery,_that.attackPower,_that.skillIds);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.id,_that.name,_that.maxCost,_that.currentCost,_that.attack
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  int maxCost,  int currentCost,  int attackPower,  List<String> skillIds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  Mastery mastery,  int attackPower,  List<String> skillIds)  $default,) {final _that = this;
 switch (_that) {
 case _Character():
-return $default(_that.id,_that.name,_that.maxCost,_that.currentCost,_that.attackPower,_that.skillIds);case _:
+return $default(_that.id,_that.name,_that.mastery,_that.attackPower,_that.skillIds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.name,_that.maxCost,_that.currentCost,_that.attack
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  int maxCost,  int currentCost,  int attackPower,  List<String> skillIds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  Mastery mastery,  int attackPower,  List<String> skillIds)?  $default,) {final _that = this;
 switch (_that) {
 case _Character() when $default != null:
-return $default(_that.id,_that.name,_that.maxCost,_that.currentCost,_that.attackPower,_that.skillIds);case _:
+return $default(_that.id,_that.name,_that.mastery,_that.attackPower,_that.skillIds);case _:
   return null;
 
 }
@@ -215,14 +216,15 @@ return $default(_that.id,_that.name,_that.maxCost,_that.currentCost,_that.attack
 @JsonSerializable()
 
 class _Character implements Character {
-  const _Character({required this.id, required this.name, required this.maxCost, required this.currentCost, required this.attackPower, required final  List<String> skillIds}): _skillIds = skillIds;
+  const _Character({required this.id, required this.name, required this.mastery, required this.attackPower, required final  List<String> skillIds}): _skillIds = skillIds;
   factory _Character.fromJson(Map<String, dynamic> json) => _$CharacterFromJson(json);
 
+/// 角色ID Unique identifier for the character
 @override final  String id;
 // required = @NonNull
+/// 角色名稱 可供玩家任意命名
 @override final  String name;
-@override final  int maxCost;
-@override final  int currentCost;
+@override final  Mastery mastery;
 @override final  int attackPower;
  final  List<String> _skillIds;
 @override List<String> get skillIds {
@@ -245,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Character&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.maxCost, maxCost) || other.maxCost == maxCost)&&(identical(other.currentCost, currentCost) || other.currentCost == currentCost)&&(identical(other.attackPower, attackPower) || other.attackPower == attackPower)&&const DeepCollectionEquality().equals(other._skillIds, _skillIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Character&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mastery, mastery) || other.mastery == mastery)&&(identical(other.attackPower, attackPower) || other.attackPower == attackPower)&&const DeepCollectionEquality().equals(other._skillIds, _skillIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,maxCost,currentCost,attackPower,const DeepCollectionEquality().hash(_skillIds));
+int get hashCode => Object.hash(runtimeType,id,name,mastery,attackPower,const DeepCollectionEquality().hash(_skillIds));
 
 @override
 String toString() {
-  return 'Character(id: $id, name: $name, maxCost: $maxCost, currentCost: $currentCost, attackPower: $attackPower, skillIds: $skillIds)';
+  return 'Character(id: $id, name: $name, mastery: $mastery, attackPower: $attackPower, skillIds: $skillIds)';
 }
 
 
@@ -265,7 +267,7 @@ abstract mixin class _$CharacterCopyWith<$Res> implements $CharacterCopyWith<$Re
   factory _$CharacterCopyWith(_Character value, $Res Function(_Character) _then) = __$CharacterCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, int maxCost, int currentCost, int attackPower, List<String> skillIds
+ String id, String name, Mastery mastery, int attackPower, List<String> skillIds
 });
 
 
@@ -282,13 +284,12 @@ class __$CharacterCopyWithImpl<$Res>
 
 /// Create a copy of Character
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? maxCost = null,Object? currentCost = null,Object? attackPower = null,Object? skillIds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? mastery = null,Object? attackPower = null,Object? skillIds = null,}) {
   return _then(_Character(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,maxCost: null == maxCost ? _self.maxCost : maxCost // ignore: cast_nullable_to_non_nullable
-as int,currentCost: null == currentCost ? _self.currentCost : currentCost // ignore: cast_nullable_to_non_nullable
-as int,attackPower: null == attackPower ? _self.attackPower : attackPower // ignore: cast_nullable_to_non_nullable
+as String,mastery: null == mastery ? _self.mastery : mastery // ignore: cast_nullable_to_non_nullable
+as Mastery,attackPower: null == attackPower ? _self.attackPower : attackPower // ignore: cast_nullable_to_non_nullable
 as int,skillIds: null == skillIds ? _self._skillIds : skillIds // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));

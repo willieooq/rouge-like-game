@@ -4,8 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'screens/game_screen.dart';
+import 'package:rouge_project/screens/battle_screen.dart';
 
 void main() {
   runApp(
@@ -19,10 +18,15 @@ class RougelikeGameApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return MaterialApp(
+    //   title: 'Rouge-like Game',
+    //   theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+    //   home: const GameScreen(), // 主要遊戲畫面
+    // );
     return MaterialApp(
       title: 'Rouge-like Game',
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      home: const GameScreen(), // 使用新的遊戲畫面
+      home: const BattleScreen(), // 使用BattleScreen
     );
   }
 }

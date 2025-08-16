@@ -4,6 +4,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rouge_project/models/character/character.dart';
+import 'package:rouge_project/models/character/mastery.dart';
 
 void main() {
   group('Character Model Tests', () {
@@ -11,16 +12,13 @@ void main() {
       const character = Character(
         id: 'test_warrior',
         name: '測試戰士',
-        maxCost: 8,
-        currentCost: 8,
+        mastery: Mastery.fire,
         attackPower: 120,
         skillIds: ['skill1', 'skill2'],
       );
 
       expect(character.id, equals('test_warrior'));
       expect(character.name, equals('測試戰士'));
-      expect(character.maxCost, equals(8));
-      expect(character.currentCost, equals(8));
       expect(character.attackPower, equals(120));
       expect(character.skillIds, equals(['skill1', 'skill2']));
     });
@@ -29,22 +27,19 @@ void main() {
       const original = Character(
         id: 'warrior',
         name: '戰士',
-        maxCost: 8,
-        currentCost: 8,
+        mastery: Mastery.fire,
         attackPower: 120,
         skillIds: ['skill1'],
       );
 
-      final updated = original.copyWith(currentCost: 5, attackPower: 150);
+      final updated = original.copyWith(attackPower: 150);
 
       // 未更新的欄位保持不變
       expect(updated.id, equals(original.id));
       expect(updated.name, equals(original.name));
-      expect(updated.maxCost, equals(original.maxCost));
       expect(updated.skillIds, equals(original.skillIds));
 
       // 更新的欄位
-      expect(updated.currentCost, equals(5));
       expect(updated.attackPower, equals(150));
     });
 
@@ -52,8 +47,7 @@ void main() {
       const char1 = Character(
         id: 'same',
         name: 'Same',
-        maxCost: 8,
-        currentCost: 8,
+        mastery: Mastery.fire,
         attackPower: 100,
         skillIds: ['skill1'],
       );
@@ -61,8 +55,7 @@ void main() {
       const char2 = Character(
         id: 'same',
         name: 'Same',
-        maxCost: 8,
-        currentCost: 8,
+        mastery: Mastery.fire,
         attackPower: 100,
         skillIds: ['skill1'],
       );
@@ -70,8 +63,7 @@ void main() {
       const char3 = Character(
         id: 'different',
         name: 'Different',
-        maxCost: 8,
-        currentCost: 8,
+        mastery: Mastery.fire,
         attackPower: 100,
         skillIds: ['skill1'],
       );
@@ -88,8 +80,7 @@ void main() {
       const character = Character(
         id: 'test',
         name: 'Test',
-        maxCost: 8,
-        currentCost: 5,
+        mastery: Mastery.fire,
         attackPower: 100,
         skillIds: ['skill1'],
       );

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import '../character/character.dart';
 import '../skill/skill.dart';
 
@@ -46,12 +47,12 @@ abstract class BattleState with _$BattleState {
     return copyWith(party: updatedParty);
   }
 
-  // Getter methods
-  int get totalPartyCost =>
-      party.map((char) => char.currentCost).reduce((a, b) => a + b);
-
-  bool get hasUsableActions =>
-      party.any((char) => char.currentCost > 0); // any = Java Stream.anyMatch()
+  // // Getter methods
+  // int get totalPartyCost =>
+  //     party.map((char) => char.currentCost).reduce((a, b) => a + b);
+  //
+  // bool get hasUsableActions =>
+  //     party.any((char) => char.currentCost > 0); // any = Java Stream.anyMatch()
 
   // JSON序列化支持
   factory BattleState.fromJson(Map<String, dynamic> json) =>

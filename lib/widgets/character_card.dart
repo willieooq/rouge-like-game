@@ -31,32 +31,6 @@ class CharacterCard extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
 
-            // Cost顯示
-            Row(
-              children: [
-                const Text('Cost: '),
-                Text(
-                  '${character.currentCost}/${character.maxCost}',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: _getCostColor(notifier.costPercentage),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Cost進度條
-            LinearProgressIndicator(
-              value: notifier.costPercentage,
-              backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(
-                _getCostColor(notifier.costPercentage),
-              ),
-            ),
-            const SizedBox(height: 16),
-
             // 攻擊力顯示
             Text('攻擊力: ${character.attackPower}'),
             const SizedBox(height: 16),
@@ -67,60 +41,30 @@ class CharacterCard extends ConsumerWidget {
             Row(
               children: [
                 // 斬擊技能按鈕 (Cost: 2)
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: notifier.canUseSkill(2)
-                        ? () => notifier.useSkill(2)
-                        : null, // null = 按鈕禁用
-                    child: const Text('斬擊 (2)'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                // 重擊技能按鈕 (Cost: 4)
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: notifier.canUseSkill(4)
-                        ? () => notifier.useSkill(4)
-                        : null,
-                    child: const Text('重擊 (4)'),
-                  ),
-                ),
+                // Expanded(
+                //   child: ElevatedButton(
+                //     onPressed: notifier.canUseSkill(2)
+                //         ? () => notifier.useSkill(2)
+                //         : null, // null = 按鈕禁用
+                //     child: const Text('斬擊 (2)'),
+                //   ),
+                // ),
+                // const SizedBox(width: 8),
+                // // 重擊技能按鈕 (Cost: 4)
+                // Expanded(
+                //   child: ElevatedButton(
+                //     onPressed: notifier.canUseSkill(4)
+                //         ? () => notifier.useSkill(4)
+                //         : null,
+                //     child: const Text('重擊 (4)'),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 8),
-
-            // Cost管理按鈕
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => notifier.restoreCost(2),
-                    child: const Text('恢復 +2'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => notifier.resetToFullCost(),
-                    child: const Text('完全恢復'),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
     );
-  }
-
-  // 根據Cost百分比返回顏色
-  Color _getCostColor(double percentage) {
-    if (percentage <= 0.25) {
-      return Colors.red; // 低Cost = 紅色
-    } else if (percentage <= 0.5) {
-      return Colors.orange; // 中等Cost = 橘色
-    } else {
-      return Colors.green; // 高Cost = 綠色
-    }
   }
 }

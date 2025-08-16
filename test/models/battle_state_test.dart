@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rouge_project/models/battle/battle_state.dart';
 import 'package:rouge_project/models/character/character.dart';
+import 'package:rouge_project/models/character/mastery.dart';
 import 'package:rouge_project/models/skill/skill.dart';
 
 void main() {
@@ -15,8 +16,7 @@ void main() {
       warrior = const Character(
         id: 'warrior',
         name: '戰士',
-        maxCost: 8,
-        currentCost: 6,
+        mastery: Mastery.fire,
         attackPower: 120,
         skillIds: ['slash'],
       );
@@ -24,8 +24,7 @@ void main() {
       mage = const Character(
         id: 'mage',
         name: '法師',
-        maxCost: 6,
-        currentCost: 4,
+        mastery: Mastery.ice,
         attackPower: 100,
         skillIds: ['fireball'],
       );
@@ -47,24 +46,6 @@ void main() {
       final battleState = BattleState(party: testParty);
 
       expect(battleState.totalPartyCost, equals(10)); // 6 + 4
-    });
-
-    test('should check if has usable actions', () {
-      final activeParty = [
-        warrior.copyWith(currentCost: 3),
-        mage.copyWith(currentCost: 2),
-      ];
-
-      final exhaustedParty = [
-        warrior.copyWith(currentCost: 0),
-        mage.copyWith(currentCost: 0),
-      ];
-
-      final activeBattle = BattleState(party: activeParty);
-      final exhaustedBattle = BattleState(party: exhaustedParty);
-
-      expect(activeBattle.hasUsableActions, isTrue);
-      expect(exhaustedBattle.hasUsableActions, isFalse);
     });
 
     test('should use skill and reduce turn cost', () {
@@ -104,19 +85,6 @@ void main() {
       final nextPlayerTurn = newTurn.startNewTurn();
       expect(nextPlayerTurn.isPlayerTurn, isTrue);
       expect(nextPlayerTurn.turnNumber, equals(2)); // 現在才算新的一輪
-    });
-
-    test('should update specific character', () {
-      final battleState = BattleState(party: testParty);
-      final updatedWarrior = warrior.copyWith(currentCost: 3);
-
-      final newBattleState = battleState.updateCharacter(
-        'warrior',
-        updatedWarrior,
-      );
-
-      expect(newBattleState.party[0], equals(updatedWarrior));
-      expect(newBattleState.party[1], equals(mage)); // 其他角色不變
     });
   });
 }
