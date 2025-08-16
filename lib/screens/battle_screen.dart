@@ -150,7 +150,9 @@ class _BattleScreenState extends ConsumerState<BattleScreen> {
                           });
                         },
                         onModeSwitchPressed: () {
-                          ref.read(operationModeProvider.notifier).switchMode();
+                          ref
+                              .read(operationModeProvider.notifier)
+                              .switchGlobalMode();
                         },
                       ),
                     ),

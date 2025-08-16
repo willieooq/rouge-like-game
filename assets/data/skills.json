@@ -1,0 +1,92 @@
+{
+  "slash": {
+    "id": "slash",
+    "name": "斬擊",
+    "cost": 2,
+    "damage": 100,
+    "description": "基礎物理攻擊",
+    "element": "physical",
+    "type": "attack"
+  },
+  "heavy_strike": {
+    "id": "heavy_strike",
+    "name": "重擊",
+    "cost": 4,
+    "damage": 200,
+    "description": "強力物理攻擊",
+    "element": "physical",
+    "type": "attack"
+  },
+  "fireball": {
+    "id": "fireball",
+    "name": "火球術",
+    "cost": 3,
+    "damage": 150,
+    "description": "火屬性魔法攻擊",
+    "element": "fire",
+    "type": "attack"
+  },
+  "heal": {
+    "id": "heal",
+    "name": "治療術",
+    "cost": 3,
+    "damage": 80,
+    "description": "恢復生命值",
+    "element": "light",
+    "type": "heal"
+  },
+  "quick_shot": {
+    "id": "quick_shot",
+    "name": "快速射擊",
+    "cost": 2,
+    "damage": 80,
+    "description": "快速的弓箭攻擊",
+    "element": "physical",
+    "type": "attack"
+  },
+  "power_shot": {
+    "id": "power_shot",
+    "name": "強力射擊",
+    "cost": 5,
+    "damage": 250,
+    "description": "蓄力的強力射擊",
+    "element": "physical",
+    "type": "attack"
+  },
+  "backstab": {
+    "id": "backstab",
+    "name": "背刺",
+    "cost": 3,
+    "damage": 180,
+    "description": "暗殺技能，傷害較高",
+    "element": "dark",
+    "type": "attack"
+  },
+  "smoke": {
+    "id": "smoke",
+    "name": "煙霧彈",
+    "cost": 2,
+    "damage": 0,
+    "description": "輔助技能，提供保護",
+    "element": "none",
+    "type": "support"
+  },
+  "blessing": {
+    "id": "blessing",
+    "name": "祝福",
+    "cost": 2,
+    "damage": 0,
+    "description": "增強隊友能力",
+    "element": "light",
+    "type": "support"
+  },
+  "divine_light": {
+    "id": "divine_light",
+    "name": "神聖之光",
+    "cost": 4,
+    "damage": 150,
+    "description": "強力治療技能",
+    "element": "light",
+    "type": "heal"
+  }
+}

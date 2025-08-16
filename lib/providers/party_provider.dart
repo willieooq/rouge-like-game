@@ -4,9 +4,9 @@ import '../data/test_characters.dart';
 import '../models/battle/party.dart';
 
 class PartyNotifier extends StateNotifier<Party> {
-  PartyNotifier(Party initialParty) : super(initialParty);
+  PartyNotifier(super.initialParty);
 
-  // 使用技能（從回合Cost中扣除）
+  /// 使用技能（從回合Cost中扣除）
   void useSkill(int skillCost) {
     if (canUseSkill(skillCost)) {
       state = state.copyWith(
@@ -15,23 +15,23 @@ class PartyNotifier extends StateNotifier<Party> {
     }
   }
 
-  // 檢查是否可以使用技能
+  /// 檢查是否可以使用技能
   bool canUseSkill(int skillCost) {
     return state.currentTurnCost >= skillCost;
   }
 
-  // 開始新回合（恢復Cost）
+  /// 開始新回合（恢復Cost）
   void startNewTurn() {
     state = state.copyWith(currentTurnCost: state.maxTurnCost);
   }
 
-  // 受到傷害
+  /// 受到傷害
   void takeDamage(int damage) {
     final newHp = (state.sharedHp - damage).clamp(0, state.maxHp);
     state = state.copyWith(sharedHp: newHp);
   }
 
-  // 治療
+  /// 治療
   void heal(int amount) {
     final newHp = (state.sharedHp + amount).clamp(0, state.maxHp);
     state = state.copyWith(sharedHp: newHp);

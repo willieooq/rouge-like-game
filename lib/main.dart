@@ -5,8 +5,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rouge_project/screens/battle_screen.dart';
+import 'package:rouge_project/services/skill_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 載入技能數據
+  await SkillService.loadSkills();
+
   runApp(
     // ProviderScope是Riverpod的根容器
     const ProviderScope(child: RougelikeGameApp()),

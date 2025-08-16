@@ -5,8 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../widgets/character_card.dart';
-
 class GameScreen extends ConsumerWidget {
   const GameScreen({super.key});
 
@@ -36,8 +34,7 @@ class GameScreen extends ConsumerWidget {
             SizedBox(height: 24),
 
             // 角色卡片
-            CharacterCard(),
-
+            // CharacterCard(),
             SizedBox(height: 24),
             Text(
               '功能說明:',
