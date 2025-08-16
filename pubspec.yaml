@@ -41,7 +41,7 @@ dependencies:
 
   # 遊戲開發可能需要的套件
   shared_preferences: ^2.2.2  # 本地數據儲存
-
+  freezed_annotation: ^3.1.0 # 標註用的套件
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -59,7 +59,9 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
   # Riverpod代碼生成
   riverpod_generator: ^2.3.11
-  build_runner: ^2.4.7
+  build_runner: ^2.4.9        # 程式碼生成執行器
+  freezed: ^3.1.0             # 程式碼生成套件
+  json_serializable: ^6.8.0 # 程式碼生成套件
 flutter:
 
   # The following line ensures that the Material Icons font is
