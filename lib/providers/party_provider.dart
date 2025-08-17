@@ -39,7 +39,9 @@ class PartyNotifier extends StateNotifier<Party> {
 
   // 便利屬性
   double get hpPercentage => state.sharedHp / state.maxHp;
+
   double get costPercentage => state.currentTurnCost / state.maxTurnCost;
+
   bool get isDefeated => state.sharedHp <= 0;
 }
 
@@ -52,7 +54,8 @@ final partyProvider = StateNotifierProvider<PartyNotifier, Party>((ref) {
     characters: characters,
     sharedHp: 100,
     maxHp: 100,
-    currentTurnCost: 10, // 每回合有10點Cost可用
+    currentTurnCost: 10,
+    // 每回合有10點Cost可用
     maxTurnCost: 10,
   );
 

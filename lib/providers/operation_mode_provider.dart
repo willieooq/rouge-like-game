@@ -26,6 +26,10 @@ class OperationModeNotifier extends StateNotifier<DisplayState> {
 
   // 全域模式切換
   void switchGlobalMode() {
+    print(
+      '切換全域模式: ${state.globalMode} -> ${state.globalMode == OperationMode.commonMode ? OperationMode.skillMode : OperationMode.commonMode}',
+    );
+
     state = state.copyWith(
       globalMode: state.globalMode == OperationMode.commonMode
           ? OperationMode.skillMode

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/normal_constants.dart';
 import '../models/character/character.dart';
-import 'character_portrait.dart';
+import 'character/character_portrait.dart';
 
 /// 隊伍資訊
 class PartyFormation extends StatelessWidget {
@@ -122,7 +122,7 @@ class PartyFormation extends StatelessWidget {
 
   Widget _buildModeSwitch() {
     return GestureDetector(
-      onTap: onModeSwitchPressed, // 這個回調需要後面定義
+      onTap: onModeSwitchPressed,
       child: Container(
         width: portraitWidth,
         height: portraitHeight,

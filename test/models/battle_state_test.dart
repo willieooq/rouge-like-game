@@ -45,7 +45,7 @@ void main() {
     test('should calculate total party cost', () {
       final battleState = BattleState(party: testParty);
 
-      expect(battleState.totalPartyCost, equals(10)); // 6 + 4
+      expect(battleState.maxTurnCost, equals(10)); // 6 + 4
     });
 
     test('should use skill and reduce turn cost', () {
