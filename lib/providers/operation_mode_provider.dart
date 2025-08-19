@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../models/battle/operation_mode.dart';
+import '../models/party/operation_mode.dart';
 
 // 添加這兩行 part 聲明
 part 'operation_mode_provider.freezed.dart';

@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rouge_project/screens/battle_screen.dart';
+import 'package:rouge_project/screens/battle_screen_update.dart';
 import 'package:rouge_project/services/skill_service.dart';
 
 void main() async {
@@ -28,6 +28,11 @@ class RougelikeGameApp extends StatelessWidget {
     //   title: 'Rouge-like Game',
     //   theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
     //   home: const GameScreen(), // 主要遊戲畫面
+    // );
+    // return MaterialApp(
+    //   title: 'Rouge-like Game',
+    //   theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+    //   home: const BattleScreen(), // 使用BattleScreen
     // );
     return MaterialApp(
       title: 'Rouge-like Game',

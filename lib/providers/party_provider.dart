@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/test_characters.dart';
-import '../models/battle/party.dart';
+import '../models/party/party.dart';
 
 class PartyNotifier extends StateNotifier<Party> {
   PartyNotifier(super.initialParty);

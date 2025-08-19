@@ -1,0 +1,272 @@
+{
+  "statusTemplates": [
+    {
+      "id": "attack_down",
+      "name": "攻擊力下降",
+      "description": "攻擊力下降 {value}%",
+      "type": "debuff",
+      "baseDuration": 3,
+      "maxStacks": 8,
+      "isStackable": true,
+      "isRefreshable": true,
+      "isDispellable": true,
+      "isRemovable": true,
+      "isDetonable": false,
+      "scope": "battle_only",
+      "attributePerStack": {
+        "attack": -0.1
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#FF6B6B",
+      "iconPath": "assets/status/attack_down.png"
+    },
+    {
+      "id": "defense_down",
+      "name": "防禦力下降",
+      "description": "防禦力下降 {value}%",
+      "type": "debuff",
+      "baseDuration": 3,
+      "maxStacks": 5,
+      "isStackable": true,
+      "isRefreshable": true,
+      "isDispellable": true,
+      "isRemovable": true,
+      "isDetonable": false,
+      "attributePerStack": {
+        "defense": -0.15
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#4ECDC4",
+      "iconPath": "assets/status/defense_down.png"
+    },
+    {
+      "id": "poison",
+      "name": "中毒",
+      "description": "每回合受到 {value} 點毒素傷害",
+      "type": "dot",
+      "baseDuration": 4,
+      "maxStacks": 10,
+      "isStackable": true,
+      "isRefreshable": false,
+      "isDispellable": true,
+      "isRemovable": true,
+      "isDetonable": true,
+      "attributePerStack": {},
+      "dotDamagePerStack": 8,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 2.5,
+      "triggers": [
+        "turn_end"
+      ],
+      "color": "#9B59B6",
+      "iconPath": "assets/status/poison.png"
+    },
+    {
+      "id": "burn",
+      "name": "燃燒",
+      "description": "每回合受到 {value} 點火焰傷害",
+      "type": "dot",
+      "baseDuration": 3,
+      "maxStacks": 6,
+      "isStackable": true,
+      "isRefreshable": true,
+      "isDispellable": true,
+      "isRemovable": true,
+      "isDetonable": true,
+      "attributePerStack": {},
+      "dotDamagePerStack": 12,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 3.0,
+      "triggers": [
+        "turn_end"
+      ],
+      "color": "#E67E22",
+      "iconPath": "assets/status/burn.png"
+    },
+    {
+      "id": "regeneration",
+      "name": "回復",
+      "description": "每回合恢復 {value} 點生命值",
+      "type": "hot",
+      "baseDuration": 5,
+      "maxStacks": 3,
+      "isStackable": true,
+      "isRefreshable": true,
+      "isDispellable": false,
+      "isRemovable": true,
+      "isDetonable": false,
+      "attributePerStack": {},
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 15,
+      "detonationMultiplier": 0.0,
+      "triggers": [
+        "turn_start"
+      ],
+      "color": "#2ECC71",
+      "iconPath": "assets/status/regeneration.png"
+    },
+    {
+      "id": "attack_boost",
+      "name": "攻擊力提升",
+      "description": "攻擊力提升 {value}%",
+      "type": "buff",
+      "baseDuration": 4,
+      "maxStacks": 5,
+      "isStackable": true,
+      "isRefreshable": true,
+      "isDispellable": false,
+      "isRemovable": true,
+      "isDetonable": false,
+      "attributePerStack": {
+        "attack": 0.15
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#F39C12",
+      "iconPath": "assets/status/attack_boost.png"
+    },
+    {
+      "id": "speed_boost",
+      "name": "速度提升",
+      "description": "速度提升 {value}%",
+      "type": "buff",
+      "baseDuration": 3,
+      "maxStacks": 4,
+      "isStackable": true,
+      "isRefreshable": true,
+      "isDispellable": false,
+      "isRemovable": true,
+      "isDetonable": false,
+      "attributePerStack": {
+        "speed": 0.2
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#1ABC9C",
+      "iconPath": "assets/status/speed_boost.png"
+    },
+    {
+      "id": "stun",
+      "name": "暈眩",
+      "description": "無法行動",
+      "type": "debuff",
+      "baseDuration": 1,
+      "maxStacks": 1,
+      "isStackable": false,
+      "isRefreshable": true,
+      "isDispellable": true,
+      "isRemovable": true,
+      "isDetonable": false,
+      "attributePerStack": {
+        "speed": -1.0
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#F1C40F",
+      "iconPath": "assets/status/stun.png"
+    },
+    {
+      "id": "bleeding",
+      "name": "流血",
+      "description": "每回合流失 {value} 點生命值，可引爆",
+      "type": "dot",
+      "baseDuration": 5,
+      "maxStacks": 15,
+      "isStackable": true,
+      "isRefreshable": false,
+      "isDispellable": true,
+      "isRemovable": true,
+      "isDetonable": true,
+      "attributePerStack": {},
+      "dotDamagePerStack": 5,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 4.0,
+      "triggers": [
+        "turn_start"
+      ],
+      "color": "#C0392B",
+      "iconPath": "assets/status/bleeding.png"
+    },
+    {
+      "id": "shield",
+      "name": "護盾",
+      "description": "防禦力提升 {value}%",
+      "type": "buff",
+      "baseDuration": 3,
+      "maxStacks": 3,
+      "isStackable": true,
+      "isRefreshable": true,
+      "isDispellable": false,
+      "isRemovable": true,
+      "isDetonable": false,
+      "attributePerStack": {
+        "defense": 0.25
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#3498DB",
+      "iconPath": "assets/status/shield.png"
+    },
+    {
+      "id": "cursed",
+      "name": "詛咒",
+      "description": "永久性攻擊力下降，無法移除",
+      "type": "debuff",
+      "baseDuration": 999,
+      "maxStacks": 3,
+      "isStackable": true,
+      "isRefreshable": false,
+      "isDispellable": false,
+      "isRemovable": false,
+      "isDetonable": false,
+      "scope": "global",
+      "attributePerStack": {
+        "attack": -0.2
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#8E44AD",
+      "iconPath": "assets/status/cursed.png"
+    },
+    {
+      "id": "blessing",
+      "name": "祝福",
+      "description": "永久性全屬性提升，無法移除",
+      "type": "buff",
+      "baseDuration": 999,
+      "maxStacks": 2,
+      "isStackable": true,
+      "isRefreshable": false,
+      "isDispellable": false,
+      "isRemovable": false,
+      "isDetonable": false,
+      "attributePerStack": {
+        "attack": 0.1,
+        "defense": 0.1,
+        "speed": 0.1
+      },
+      "dotDamagePerStack": 0,
+      "hotHealingPerStack": 0,
+      "detonationMultiplier": 0.0,
+      "triggers": [],
+      "color": "#F4D03F",
+      "iconPath": "assets/status/blessing.png"
+    }
+  ]
+}

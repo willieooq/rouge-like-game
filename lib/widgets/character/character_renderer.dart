@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../models/battle/operation_mode.dart';
 import '../../models/character/character.dart';
 import '../../models/character/mastery.dart';
+import '../../models/party/operation_mode.dart';
 import '../../providers/operation_mode_provider.dart';
 import '../mastery_dot.dart';
 import 'attack_power_display.dart';
@@ -125,9 +125,9 @@ class _InteractivePortraitWrapper extends ConsumerWidget {
         .getCharacterDisplayMode(character.id);
 
     // Debug 輸出
-    print(
-      '角色 ${character.name} 顯示模式: $characterDisplayMode, 全域模式: ${displayState.globalMode}',
-    );
+    // print(
+    //   '角色 ${character.name} 顯示模式: $characterDisplayMode, 全域模式: ${displayState.globalMode}',
+    // );
 
     return characterDisplayMode == CharacterDisplayMode.skill
         ? CharacterSkillView(character: character)

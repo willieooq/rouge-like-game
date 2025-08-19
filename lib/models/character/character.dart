@@ -20,7 +20,7 @@ abstract class Character with _$Character {
     required Mastery mastery,
     required int attackPower,
     required List<String> skillIds,
-  }) = _Character; // = _Character是Freezed的命名慣例
+  }) = _Character;
 
   // JSON序列化支持（未來可能需要，用於存檔）
   factory Character.fromJson(Map<String, dynamic> json) =>

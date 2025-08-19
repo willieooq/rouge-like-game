@@ -37,3 +37,25 @@ class PortraitFontSizes {
   static double get skillButtonPadding =>
       portraitHeight * skillButtonPaddingRatio;
 }
+
+/// 敵人卡片大小的字體比例
+class EnemyFontSizes {
+  static const double enemyNameFontRadio = 0.18;
+  static const double enemyHPFontRadio = 0.14;
+
+  static double get enemyNameFontFontSize =>
+      portraitHeight * enemyNameFontRadio;
+
+  static double get enemyHPFontSize => portraitHeight * enemyHPFontRadio;
+}
+
+/// UI大小的字體比例
+class UIFontSizes {
+  static const double battleStatFontRadio = 0.18;
+  static const double statusEffectsFontRadio = 0.2;
+
+  static double get battleStatFontSize => portraitHeight * battleStatFontRadio;
+
+  static double get statusEffectsFontSize =>
+      portraitHeight * statusEffectsFontRadio;
+}
