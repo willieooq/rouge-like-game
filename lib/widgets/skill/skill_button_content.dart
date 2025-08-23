@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/font_constants.dart';
-import '../../models/skill/skill_data.dart';
+import '../../models/skill/skills.dart';
 
 /// 技能按鈕內容佈局組件
 /// 負責技能按鈕內部的文字和數值排版
 class SkillButtonContent extends StatelessWidget {
-  final SkillData skillData;
+  final Skills skills;
   final bool canUse;
 
   const SkillButtonContent({
     super.key,
-    required this.skillData,
+    required this.skills,
     this.canUse = true,
   });
 
@@ -34,7 +34,7 @@ class SkillButtonContent extends StatelessWidget {
   /// 建立技能名稱
   Widget _buildSkillName() {
     return Text(
-      skillData.name,
+      skills.name,
       style: TextStyle(
         fontSize: PortraitFontSizes.skillNameFontSize,
         fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class SkillButtonContent extends StatelessWidget {
   /// 建立技能描述
   Widget _buildSkillDescription() {
     return Text(
-      skillData.description,
+      skills.description,
       style: TextStyle(
         fontSize: PortraitFontSizes.skillDescriptionFontSize,
         color: _getDescriptionColor(),
@@ -60,7 +60,7 @@ class SkillButtonContent extends StatelessWidget {
   /// 建立技能Cost
   Widget _buildSkillCost() {
     return Text(
-      '${skillData.cost}',
+      '${skills.cost}',
       style: TextStyle(
         fontSize: PortraitFontSizes.skillCostFontSize,
         fontWeight: FontWeight.bold,

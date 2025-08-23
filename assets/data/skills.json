@@ -6,87 +6,141 @@
     "damage": 100,
     "description": "基礎物理攻擊",
     "element": "physical",
-    "type": "attack"
+    "type": "attack",
+    "damageMultiplier": 0.0,
+    "statusEffects": [],
+    "isAOE": false,
+    "defaultTarget": "enemy"
   },
   "heavy_strike": {
     "id": "heavy_strike",
     "name": "重擊",
     "cost": 4,
-    "damage": 200,
-    "description": "強力物理攻擊",
+    "damage": 50,
+    "description": "造成額外50%攻擊力的強力打擊",
     "element": "physical",
-    "type": "attack"
+    "type": "attack",
+    "damageMultiplier": 0.5,
+    "statusEffects": [],
+    "isAOE": false,
+    "defaultTarget": "enemy"
   },
-  "fireball": {
-    "id": "fireball",
-    "name": "火球術",
-    "cost": 3,
-    "damage": 150,
-    "description": "火屬性魔法攻擊",
-    "element": "fire",
-    "type": "attack"
+  "vampire_strike": {
+    "id": "vampire_strike",
+    "name": "吸血斬擊",
+    "cost": 5,
+    "damage": 80,
+    "description": "攻擊敵人並回復造成傷害50%的生命值",
+    "element": "dark",
+    "type": "attack",
+    "damageMultiplier": 0.3,
+    "statusEffects": [
+      "vampire_heal"
+    ],
+    "isAOE": false,
+    "defaultTarget": "enemy"
   },
   "heal": {
     "id": "heal",
     "name": "治療術",
     "cost": 3,
-    "damage": 80,
-    "description": "恢復生命值",
-    "element": "light",
-    "type": "heal"
-  },
-  "quick_shot": {
-    "id": "quick_shot",
-    "name": "快速射擊",
-    "cost": 2,
-    "damage": 80,
-    "description": "快速的弓箭攻擊",
-    "element": "physical",
-    "type": "attack"
-  },
-  "power_shot": {
-    "id": "power_shot",
-    "name": "強力射擊",
-    "cost": 5,
-    "damage": 250,
-    "description": "蓄力的強力射擊",
-    "element": "physical",
-    "type": "attack"
-  },
-  "backstab": {
-    "id": "backstab",
-    "name": "背刺",
-    "cost": 3,
-    "damage": 180,
-    "description": "暗殺技能，傷害較高",
-    "element": "dark",
-    "type": "attack"
-  },
-  "smoke": {
-    "id": "smoke",
-    "name": "煙霧彈",
-    "cost": 2,
-    "damage": 0,
-    "description": "輔助技能，提供保護",
-    "element": "none",
-    "type": "support"
-  },
-  "blessing": {
-    "id": "blessing",
-    "name": "祝福",
-    "cost": 2,
-    "damage": 0,
-    "description": "增強隊友能力",
-    "element": "light",
-    "type": "support"
-  },
-  "divine_light": {
-    "id": "divine_light",
-    "name": "神聖之光",
-    "cost": 4,
     "damage": 150,
-    "description": "強力治療技能",
+    "description": "回復隊伍150點生命值",
     "element": "light",
-    "type": "heal"
+    "type": "heal",
+    "damageMultiplier": 0.0,
+    "statusEffects": [],
+    "isAOE": false,
+    "defaultTarget": "party"
+  },
+  "power_boost": {
+    "id": "power_boost",
+    "name": "力量提升",
+    "cost": 4,
+    "damage": 0,
+    "description": "提升隊伍攻擊力20%，持續3回合",
+    "element": "none",
+    "type": "support",
+    "damageMultiplier": 0.0,
+    "statusEffects": [
+      "attack_up"
+    ],
+    "isAOE": false,
+    "defaultTarget": "party"
+  },
+  "poison_blade": {
+    "id": "poison_blade",
+    "name": "毒刃",
+    "cost": 3,
+    "damage": 60,
+    "description": "攻擊敵人並施加中毒效果",
+    "element": "poison",
+    "type": "attack",
+    "damageMultiplier": 0.1,
+    "statusEffects": [
+      "poison"
+    ],
+    "isAOE": false,
+    "defaultTarget": "enemy"
+  },
+  "weakness": {
+    "id": "weakness",
+    "name": "虛弱詛咒",
+    "cost": 2,
+    "damage": 0,
+    "description": "降低敵人攻擊力15%，持續3回合",
+    "element": "dark",
+    "type": "support",
+    "damageMultiplier": 0.0,
+    "statusEffects": [
+      "attack_down"
+    ],
+    "isAOE": false,
+    "defaultTarget": "enemy"
+  },
+  "flame_burst": {
+    "id": "flame_burst",
+    "name": "火焰爆發",
+    "cost": 6,
+    "damage": 200,
+    "description": "造成大量火焰傷害",
+    "element": "fire",
+    "type": "attack",
+    "damageMultiplier": 0.8,
+    "statusEffects": [
+      "burn"
+    ],
+    "isAOE": false,
+    "defaultTarget": "enemy"
+  },
+  "shield": {
+    "id": "shield",
+    "name": "防護罩",
+    "cost": 3,
+    "damage": 0,
+    "description": "提升隊伍防禦力25%，持續2回合",
+    "element": "none",
+    "type": "support",
+    "damageMultiplier": 0.0,
+    "statusEffects": [
+      "defense_up"
+    ],
+    "isAOE": false,
+    "defaultTarget": "party"
+  },
+  "berserker_rage": {
+    "id": "berserker_rage",
+    "name": "狂戰士之怒",
+    "cost": 5,
+    "damage": 120,
+    "description": "造成傷害並提升自身攻擊力30%，但降低防禦力10%",
+    "element": "physical",
+    "type": "attack",
+    "damageMultiplier": 0.4,
+    "statusEffects": [
+      "berserk"
+    ],
+    "isAOE": false,
+    "defaultTarget": "enemy"
   }
 }

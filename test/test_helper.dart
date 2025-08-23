@@ -2,7 +2,7 @@
 import 'package:rouge_project/models/battle/battle_state.dart';
 import 'package:rouge_project/models/character/character.dart';
 import 'package:rouge_project/models/character/mastery.dart';
-import 'package:rouge_project/models/skill/skill.dart';
+import 'package:rouge_project/models/skill/skills.dart';
 
 class TestDataBuilder {
   // 建立測試用角色的便利方法

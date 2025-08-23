@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/skill/skill_data.dart';
+import '../../models/skill/skills.dart';
 import '../../services/skill_service.dart';
 import 'skill_button.dart';
 import 'skill_icon.dart';
@@ -33,13 +33,13 @@ class SkillRenderer {
     required VoidCallback? onTap,
     bool isTopHalf = true,
   }) {
-    final skillData = SkillService.getSkill(skillId);
-    if (skillData == null) {
+    final skills = SkillService.getSkill(skillId);
+    if (skills == null) {
       return buildEmptySlot(isTopHalf: isTopHalf);
     }
 
     return SkillButton(
-      skillData: skillData,
+      skills: skills,
       canUse: canUse,
       onTap: onTap,
       isTopHalf: isTopHalf,
@@ -55,13 +55,13 @@ class SkillRenderer {
     double? width,
     double? height,
   }) {
-    final skillData = SkillService.getSkill(skillId);
-    if (skillData == null) {
+    final skills = SkillService.getSkill(skillId);
+    if (skills == null) {
       return buildEmptySlot(isTopHalf: isTopHalf);
     }
 
     return SkillButton(
-      skillData: skillData,
+      skills: skills,
       canUse: true,
       // 純展示模式總是可用樣式
       isTopHalf: isTopHalf,
@@ -73,22 +73,22 @@ class SkillRenderer {
 
   /// 技能圖標（用於簡化顯示）
   static Widget buildIcon(String skillId, {double? size}) {
-    final skillData = SkillService.getSkill(skillId);
-    if (skillData == null) {
+    final skills = SkillService.getSkill(skillId);
+    if (skills == null) {
       return SkillIcon.empty(size: size);
     }
 
-    return SkillIcon(skillData: skillData, size: size);
+    return SkillIcon(skills: skills, size: size);
   }
 
   /// 技能信息卡片（用於詳細說明）
   static Widget buildInfoCard(String skillId) {
-    final skillData = SkillService.getSkill(skillId);
-    if (skillData == null) {
+    final skills = SkillService.getSkill(skillId);
+    if (skills == null) {
       return const SkillInfo.empty();
     }
 
-    return SkillInfo(skillData: skillData);
+    return SkillInfo(skills: skills);
   }
 
   /// 技能列表（用於技能選擇界面）
@@ -125,7 +125,7 @@ class SkillRenderer {
   }
 
   /// 根據技能ID獲取技能數據（工具方法）
-  static SkillData? getSkillData(String skillId) {
+  static Skills? getSkills(String skillId) {
     return SkillService.getSkill(skillId);
   }
 

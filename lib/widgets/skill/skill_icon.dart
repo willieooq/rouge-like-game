@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../models/skill/skill_data.dart';
+import '../../models/skill/skills.dart';
 
 /// 技能圖標組件
 /// 用於簡化的技能顯示
 class SkillIcon extends StatelessWidget {
-  final SkillData skillData;
+  final Skills skills;
   final double? size;
 
-  const SkillIcon({super.key, required this.skillData, this.size});
+  const SkillIcon({super.key, required this.skills, this.size});
 
   /// 空技能圖標構造函數
   const SkillIcon.empty({super.key, this.size})
-    : skillData = const SkillData(
+    : skills = const Skills(
         id: '',
         name: '',
         cost: 0,
@@ -26,7 +26,7 @@ class SkillIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconSize = size ?? 40.0;
 
-    if (skillData.id.isEmpty) {
+    if (skills.id.isEmpty) {
       return _buildEmptyIcon(iconSize);
     }
 
@@ -68,7 +68,7 @@ class SkillIcon extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                '${skillData.cost}',
+                '${skills.cost}',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: iconSize * 0.2, // 圖標大小的20%
@@ -98,7 +98,7 @@ class SkillIcon extends StatelessWidget {
 
   /// 根據技能屬性獲取顏色
   Color _getSkillColor() {
-    switch (skillData.element.toLowerCase()) {
+    switch (skills.element.toLowerCase()) {
       case 'fire':
         return Colors.red[600]!;
       case 'ice':
@@ -122,11 +122,9 @@ class SkillIcon extends StatelessWidget {
 
   /// 獲取技能名稱縮寫
   String _getSkillAbbreviation() {
-    if (skillData.name.isEmpty) return '?';
+    if (skills.name.isEmpty) return '?';
 
     // 取中文首字或英文首字母
-    return skillData.name.length > 1
-        ? skillData.name.substring(0, 1)
-        : skillData.name;
+    return skills.name.length > 1 ? skills.name.substring(0, 1) : skills.name;
   }
 }

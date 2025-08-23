@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../models/skill/skill_data.dart';
+import '../../models/skill/skills.dart';
 import 'skill_icon.dart';
 
 /// 技能信息卡片組件
 /// 用於詳細的技能說明顯示
 class SkillInfo extends StatelessWidget {
-  final SkillData skillData;
+  final Skills skills;
 
-  const SkillInfo({super.key, required this.skillData});
+  const SkillInfo({super.key, required this.skills});
 
   /// 空技能信息構造函數
   const SkillInfo.empty({super.key})
-    : skillData = const SkillData(
+    : skills = const Skills(
         id: '',
         name: '',
         cost: 0,
@@ -24,7 +24,7 @@ class SkillInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (skillData.id.isEmpty) {
+    if (skills.id.isEmpty) {
       return _buildEmptyInfo();
     }
 
@@ -34,7 +34,7 @@ class SkillInfo extends StatelessWidget {
         child: Row(
           children: [
             // 技能圖標
-            SkillIcon(skillData: skillData, size: 48),
+            SkillIcon(skills: skills, size: 48),
             const SizedBox(width: 12),
 
             // 技能詳細信息
@@ -47,7 +47,7 @@ class SkillInfo extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        skillData.name,
+                        skills.name,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -63,7 +63,7 @@ class SkillInfo extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'Cost: ${skillData.cost}',
+                          'Cost: ${skills.cost}',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.blue[800],
@@ -77,7 +77,7 @@ class SkillInfo extends StatelessWidget {
 
                   // 技能描述
                   Text(
-                    skillData.description,
+                    skills.description,
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 4),
@@ -85,11 +85,11 @@ class SkillInfo extends StatelessWidget {
                   // 技能屬性信息
                   Row(
                     children: [
-                      _buildInfoChip('傷害', '${skillData.damage}'),
+                      _buildInfoChip('傷害', '${skills.damage}'),
                       const SizedBox(width: 8),
-                      _buildInfoChip('屬性', skillData.element),
+                      _buildInfoChip('屬性', skills.element),
                       const SizedBox(width: 8),
-                      _buildInfoChip('類型', skillData.type),
+                      _buildInfoChip('類型', skills.type),
                     ],
                   ),
                 ],

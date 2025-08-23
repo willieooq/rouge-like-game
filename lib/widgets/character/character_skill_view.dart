@@ -55,11 +55,11 @@ class CharacterSkillView extends ConsumerWidget {
   }
 
   /// 使用技能
-  void _useSkill(WidgetRef ref, String skillId) {
+  void _useSkill(WidgetRef ref, String skillId) async {
     final characterNotifier = ref.read(
       characterProviderFamily(character).notifier,
     );
-    final success = characterNotifier.useSkill(skillId);
+    final success = await characterNotifier.useSkill(skillId); // 添加 await
 
     if (success) {
       // 通知技能已使用

@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rouge_project/models/battle/battle_state.dart';
 import 'package:rouge_project/models/character/character.dart';
 import 'package:rouge_project/models/character/mastery.dart';
-import 'package:rouge_project/models/skill/skill.dart';
+import 'package:rouge_project/models/skill/skills.dart';
 
 void main() {
   group('BattleState Model Tests', () {

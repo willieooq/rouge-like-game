@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:rouge_project/widgets/skill/skill_button_content.dart';
 
 import '../../constants/normal_constants.dart';
-import '../../models/skill/skill_data.dart';
+import '../../models/skill/skills.dart';
 
 /// 技能按鈕組件
 /// 可配置為交互式或純展示模式
 class SkillButton extends StatelessWidget {
-  final SkillData skillData;
+  final Skills skills;
   final bool canUse;
   final VoidCallback? onTap;
   final bool isTopHalf;
@@ -17,7 +17,7 @@ class SkillButton extends StatelessWidget {
 
   const SkillButton({
     super.key,
-    required this.skillData,
+    required this.skills,
     this.canUse = true,
     this.onTap,
     this.isTopHalf = true,
@@ -32,7 +32,7 @@ class SkillButton extends StatelessWidget {
     this.isTopHalf = true,
     this.width,
     this.height,
-  }) : skillData = const SkillData(
+  }) : skills = const Skills(
          id: '',
          name: '',
          cost: 0,
@@ -47,7 +47,7 @@ class SkillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (skillData.id.isEmpty) {
+    if (skills.id.isEmpty) {
       return _buildEmptySlot();
     }
 
@@ -68,7 +68,7 @@ class SkillButton extends StatelessWidget {
       height: height,
       padding: EdgeInsets.all(_getButtonPadding()),
       decoration: _buildButtonDecoration(),
-      child: SkillButtonContent(skillData: skillData, canUse: canUse),
+      child: SkillButtonContent(skills: skills, canUse: canUse),
     );
   }
 

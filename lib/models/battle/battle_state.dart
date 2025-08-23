@@ -111,7 +111,7 @@ abstract class BattleStatistics with _$BattleStatistics {
     required int totalDamageDealt,
     required int totalDamageReceived,
     required int totalHealingReceived,
-    required int skillsUsed,
+    required List<String> skillsUsed,
     required int statusEffectsApplied,
     required int turnCount,
   }) = _BattleStatistics;
@@ -121,7 +121,7 @@ abstract class BattleStatistics with _$BattleStatistics {
       totalDamageDealt: 0,
       totalDamageReceived: 0,
       totalHealingReceived: 0,
-      skillsUsed: 0,
+      skillsUsed: [],
       statusEffectsApplied: 0,
       turnCount: 0,
     );

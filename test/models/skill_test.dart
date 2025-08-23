@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rouge_project/models/skill/skill.dart';
+import 'package:rouge_project/models/skill/skills.dart';
 
 void main() {
   group('Skill Model Tests', () {

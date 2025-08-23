@@ -487,7 +487,7 @@ $CharacterCopyWith<$Res>? get selectedCharacter {
 /// @nodoc
 mixin _$BattleStatistics {
 
- int get totalDamageDealt; int get totalDamageReceived; int get totalHealingReceived; int get skillsUsed; int get statusEffectsApplied; int get turnCount;
+ int get totalDamageDealt; int get totalDamageReceived; int get totalHealingReceived; List<String> get skillsUsed; int get statusEffectsApplied; int get turnCount;
 /// Create a copy of BattleStatistics
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -498,12 +498,12 @@ $BattleStatisticsCopyWith<BattleStatistics> get copyWith => _$BattleStatisticsCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BattleStatistics&&(identical(other.totalDamageDealt, totalDamageDealt) || other.totalDamageDealt == totalDamageDealt)&&(identical(other.totalDamageReceived, totalDamageReceived) || other.totalDamageReceived == totalDamageReceived)&&(identical(other.totalHealingReceived, totalHealingReceived) || other.totalHealingReceived == totalHealingReceived)&&(identical(other.skillsUsed, skillsUsed) || other.skillsUsed == skillsUsed)&&(identical(other.statusEffectsApplied, statusEffectsApplied) || other.statusEffectsApplied == statusEffectsApplied)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BattleStatistics&&(identical(other.totalDamageDealt, totalDamageDealt) || other.totalDamageDealt == totalDamageDealt)&&(identical(other.totalDamageReceived, totalDamageReceived) || other.totalDamageReceived == totalDamageReceived)&&(identical(other.totalHealingReceived, totalHealingReceived) || other.totalHealingReceived == totalHealingReceived)&&const DeepCollectionEquality().equals(other.skillsUsed, skillsUsed)&&(identical(other.statusEffectsApplied, statusEffectsApplied) || other.statusEffectsApplied == statusEffectsApplied)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,totalDamageDealt,totalDamageReceived,totalHealingReceived,skillsUsed,statusEffectsApplied,turnCount);
+int get hashCode => Object.hash(runtimeType,totalDamageDealt,totalDamageReceived,totalHealingReceived,const DeepCollectionEquality().hash(skillsUsed),statusEffectsApplied,turnCount);
 
 @override
 String toString() {
@@ -518,7 +518,7 @@ abstract mixin class $BattleStatisticsCopyWith<$Res>  {
   factory $BattleStatisticsCopyWith(BattleStatistics value, $Res Function(BattleStatistics) _then) = _$BattleStatisticsCopyWithImpl;
 @useResult
 $Res call({
- int totalDamageDealt, int totalDamageReceived, int totalHealingReceived, int skillsUsed, int statusEffectsApplied, int turnCount
+ int totalDamageDealt, int totalDamageReceived, int totalHealingReceived, List<String> skillsUsed, int statusEffectsApplied, int turnCount
 });
 
 
@@ -541,7 +541,7 @@ totalDamageDealt: null == totalDamageDealt ? _self.totalDamageDealt : totalDamag
 as int,totalDamageReceived: null == totalDamageReceived ? _self.totalDamageReceived : totalDamageReceived // ignore: cast_nullable_to_non_nullable
 as int,totalHealingReceived: null == totalHealingReceived ? _self.totalHealingReceived : totalHealingReceived // ignore: cast_nullable_to_non_nullable
 as int,skillsUsed: null == skillsUsed ? _self.skillsUsed : skillsUsed // ignore: cast_nullable_to_non_nullable
-as int,statusEffectsApplied: null == statusEffectsApplied ? _self.statusEffectsApplied : statusEffectsApplied // ignore: cast_nullable_to_non_nullable
+as List<String>,statusEffectsApplied: null == statusEffectsApplied ? _self.statusEffectsApplied : statusEffectsApplied // ignore: cast_nullable_to_non_nullable
 as int,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
@@ -628,7 +628,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int totalDamageDealt,  int totalDamageReceived,  int totalHealingReceived,  int skillsUsed,  int statusEffectsApplied,  int turnCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int totalDamageDealt,  int totalDamageReceived,  int totalHealingReceived,  List<String> skillsUsed,  int statusEffectsApplied,  int turnCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BattleStatistics() when $default != null:
 return $default(_that.totalDamageDealt,_that.totalDamageReceived,_that.totalHealingReceived,_that.skillsUsed,_that.statusEffectsApplied,_that.turnCount);case _:
@@ -649,7 +649,7 @@ return $default(_that.totalDamageDealt,_that.totalDamageReceived,_that.totalHeal
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int totalDamageDealt,  int totalDamageReceived,  int totalHealingReceived,  int skillsUsed,  int statusEffectsApplied,  int turnCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int totalDamageDealt,  int totalDamageReceived,  int totalHealingReceived,  List<String> skillsUsed,  int statusEffectsApplied,  int turnCount)  $default,) {final _that = this;
 switch (_that) {
 case _BattleStatistics():
 return $default(_that.totalDamageDealt,_that.totalDamageReceived,_that.totalHealingReceived,_that.skillsUsed,_that.statusEffectsApplied,_that.turnCount);case _:
@@ -669,7 +669,7 @@ return $default(_that.totalDamageDealt,_that.totalDamageReceived,_that.totalHeal
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int totalDamageDealt,  int totalDamageReceived,  int totalHealingReceived,  int skillsUsed,  int statusEffectsApplied,  int turnCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int totalDamageDealt,  int totalDamageReceived,  int totalHealingReceived,  List<String> skillsUsed,  int statusEffectsApplied,  int turnCount)?  $default,) {final _that = this;
 switch (_that) {
 case _BattleStatistics() when $default != null:
 return $default(_that.totalDamageDealt,_that.totalDamageReceived,_that.totalHealingReceived,_that.skillsUsed,_that.statusEffectsApplied,_that.turnCount);case _:
@@ -684,13 +684,19 @@ return $default(_that.totalDamageDealt,_that.totalDamageReceived,_that.totalHeal
 
 
 class _BattleStatistics implements BattleStatistics {
-  const _BattleStatistics({required this.totalDamageDealt, required this.totalDamageReceived, required this.totalHealingReceived, required this.skillsUsed, required this.statusEffectsApplied, required this.turnCount});
+  const _BattleStatistics({required this.totalDamageDealt, required this.totalDamageReceived, required this.totalHealingReceived, required final  List<String> skillsUsed, required this.statusEffectsApplied, required this.turnCount}): _skillsUsed = skillsUsed;
   
 
 @override final  int totalDamageDealt;
 @override final  int totalDamageReceived;
 @override final  int totalHealingReceived;
-@override final  int skillsUsed;
+ final  List<String> _skillsUsed;
+@override List<String> get skillsUsed {
+  if (_skillsUsed is EqualUnmodifiableListView) return _skillsUsed;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_skillsUsed);
+}
+
 @override final  int statusEffectsApplied;
 @override final  int turnCount;
 
@@ -704,12 +710,12 @@ _$BattleStatisticsCopyWith<_BattleStatistics> get copyWith => __$BattleStatistic
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BattleStatistics&&(identical(other.totalDamageDealt, totalDamageDealt) || other.totalDamageDealt == totalDamageDealt)&&(identical(other.totalDamageReceived, totalDamageReceived) || other.totalDamageReceived == totalDamageReceived)&&(identical(other.totalHealingReceived, totalHealingReceived) || other.totalHealingReceived == totalHealingReceived)&&(identical(other.skillsUsed, skillsUsed) || other.skillsUsed == skillsUsed)&&(identical(other.statusEffectsApplied, statusEffectsApplied) || other.statusEffectsApplied == statusEffectsApplied)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BattleStatistics&&(identical(other.totalDamageDealt, totalDamageDealt) || other.totalDamageDealt == totalDamageDealt)&&(identical(other.totalDamageReceived, totalDamageReceived) || other.totalDamageReceived == totalDamageReceived)&&(identical(other.totalHealingReceived, totalHealingReceived) || other.totalHealingReceived == totalHealingReceived)&&const DeepCollectionEquality().equals(other._skillsUsed, _skillsUsed)&&(identical(other.statusEffectsApplied, statusEffectsApplied) || other.statusEffectsApplied == statusEffectsApplied)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,totalDamageDealt,totalDamageReceived,totalHealingReceived,skillsUsed,statusEffectsApplied,turnCount);
+int get hashCode => Object.hash(runtimeType,totalDamageDealt,totalDamageReceived,totalHealingReceived,const DeepCollectionEquality().hash(_skillsUsed),statusEffectsApplied,turnCount);
 
 @override
 String toString() {
@@ -724,7 +730,7 @@ abstract mixin class _$BattleStatisticsCopyWith<$Res> implements $BattleStatisti
   factory _$BattleStatisticsCopyWith(_BattleStatistics value, $Res Function(_BattleStatistics) _then) = __$BattleStatisticsCopyWithImpl;
 @override @useResult
 $Res call({
- int totalDamageDealt, int totalDamageReceived, int totalHealingReceived, int skillsUsed, int statusEffectsApplied, int turnCount
+ int totalDamageDealt, int totalDamageReceived, int totalHealingReceived, List<String> skillsUsed, int statusEffectsApplied, int turnCount
 });
 
 
@@ -746,8 +752,8 @@ class __$BattleStatisticsCopyWithImpl<$Res>
 totalDamageDealt: null == totalDamageDealt ? _self.totalDamageDealt : totalDamageDealt // ignore: cast_nullable_to_non_nullable
 as int,totalDamageReceived: null == totalDamageReceived ? _self.totalDamageReceived : totalDamageReceived // ignore: cast_nullable_to_non_nullable
 as int,totalHealingReceived: null == totalHealingReceived ? _self.totalHealingReceived : totalHealingReceived // ignore: cast_nullable_to_non_nullable
-as int,skillsUsed: null == skillsUsed ? _self.skillsUsed : skillsUsed // ignore: cast_nullable_to_non_nullable
-as int,statusEffectsApplied: null == statusEffectsApplied ? _self.statusEffectsApplied : statusEffectsApplied // ignore: cast_nullable_to_non_nullable
+as int,skillsUsed: null == skillsUsed ? _self._skillsUsed : skillsUsed // ignore: cast_nullable_to_non_nullable
+as List<String>,statusEffectsApplied: null == statusEffectsApplied ? _self.statusEffectsApplied : statusEffectsApplied // ignore: cast_nullable_to_non_nullable
 as int,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
