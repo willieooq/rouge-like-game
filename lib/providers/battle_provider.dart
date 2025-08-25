@@ -1,11 +1,13 @@
 // lib/providers/battle_provider.dart (狀態機重構版)
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rouge_project/providers/party_provider.dart';
 import 'package:rouge_project/services/enemy_ai_service.dart';
 
 import '../models/battle/battle_state.dart';
 import '../models/character/character.dart';
 import '../models/enemy/enemy.dart';
 import '../models/skill/skill_execution_result.dart';
+import '../models/status/status_effect.dart';
 import '../services/battle_service.dart';
 import '../services/enemy_action_service.dart';
 import '../services/status_service.dart';
@@ -21,12 +23,14 @@ class BattleNotifier extends StateNotifier<BattleState> {
   final EnemyActionService _enemyActionService;
   final StatusService _statusService;
   final EnemyAIService _enemyAIService;
+  final Ref ref; // 添加 ref 字段
 
   BattleNotifier({
     required BattleService battleService,
     required EnemyActionService enemyActionService,
     required StatusService statusService,
     required EnemyAIService enemyAIService,
+    required this.ref, // 添加 ref 參數
   }) : _battleService = battleService,
        _enemyActionService = enemyActionService,
        _statusService = statusService,
@@ -38,7 +42,17 @@ class BattleNotifier extends StateNotifier<BattleState> {
     if (enemies.isEmpty) return;
 
     final enemy = enemies.first;
-    const playerParty = <Character>[];
+
+    // 從 PartyProvider 獲取玩家隊伍，而不是使用空隊伍
+    final party = ref.read(partyProvider);
+    final playerParty = party.characters;
+
+    print('BattleProvider: 開始戰鬥，玩家隊伍角色數: ${playerParty.length}');
+    for (final character in playerParty) {
+      print(
+        'BattleProvider: 隊伍角色 - ID: ${character.id}, 名稱: ${character.name}',
+      );
+    }
 
     initializeBattle(playerParty: playerParty, enemy: enemy, canEscape: true);
   }
@@ -121,26 +135,15 @@ class BattleNotifier extends StateNotifier<BattleState> {
     }
   }
 
-  /// 玩家結束回合 - UI 調用
-  void endPlayerTurn() {
-    print('戰鬥階段: 玩家回合結束');
-
-    if (!_battleService.isPlayerTurn(state)) return;
-
-    // 處理玩家回合結束
-    _executePlayerTurnEnd();
-
-    // 推進到敵人回合
-    _setPhase(BattlePhase.enemyTurn);
-    advanceBattlePhase();
-  }
-
   /// 玩家使用技能 - UI 調用
   Future<SkillExecutionResult> executePlayerSkill(
     String skillId, {
     required String casterId,
   }) async {
+    print('BattleProvider: 接收到技能使用請求 - 技能: $skillId, 施法者: $casterId');
+
     if (!_battleService.isPlayerTurn(state)) {
+      print('BattleProvider: 當前不是玩家回合，拒絕技能使用');
       return SkillExecutionResult(
         skillId: skillId,
         casterId: casterId,
@@ -151,17 +154,24 @@ class BattleNotifier extends StateNotifier<BattleState> {
     }
 
     // 執行技能邏輯
+    print('BattleProvider: 調用 BattleService.executePlayerSkill');
     final result = _battleService.executePlayerSkill(state, skillId, casterId);
+    print(
+      'BattleProvider: BattleService 返回結果 - 成功: ${result.success}, 效果鏈數量: ${result.effectChains.length}',
+    );
 
     if (result.success) {
       // 應用技能效果到遊戲狀態
+      print('BattleProvider: 開始應用技能效果到遊戲狀態');
       await _applySkillExecutionResult(result);
+      print('BattleProvider: 技能效果應用完成');
 
       // 更新統計數據
       _updateSkillStatistics(result);
 
       // 使用技能後檢查戰鬥是否結束
       if (_checkBattleEnd()) {
+        print('BattleProvider: 技能使用後戰鬥結束');
         advanceBattlePhase();
       }
     }
@@ -199,55 +209,7 @@ class BattleNotifier extends StateNotifier<BattleState> {
     return result.success;
   }
 
-  // ===== 純粹的階段執行方法 (無流程控制) =====
-
-  /// 執行玩家回合開始
-  void _executePlayerTurnStart() {
-    print('戰鬥階段: 玩家回合開始');
-
-    if (!_battleService.canContinueBattle(state)) return;
-
-    // 處理回合開始狀態效果
-    final statusResult = _statusService.processTurnStart(
-      state.playerStatusManager,
-      isPlayer: true,
-    );
-
-    // 更新狀態並應用效果
-    state = _battleService.startPlayerTurn(state);
-    _applyStatusEffects(statusResult, isPlayer: true);
-  }
-
-  /// 執行玩家回合結束
-  void _executePlayerTurnEnd() {
-    print('戰鬥階段: 玩家回合結束處理');
-
-    // 處理回合結束狀態效果
-    final statusResult = _statusService.processTurnEnd(
-      state.playerStatusManager,
-      isPlayer: true,
-    );
-
-    _applyStatusEffects(statusResult, isPlayer: true);
-  }
-
-  /// 執行敵人回合開始
-  void _executeEnemyTurnStart() {
-    print('戰鬥階段: 敵人回合開始');
-
-    if (!_battleService.canContinueBattle(state)) return;
-
-    // 處理敵人回合開始狀態效果
-    final statusResult = _statusService.processTurnStart(
-      state.enemyStatusManager,
-      isPlayer: false,
-    );
-
-    // 更新狀態
-    state = _battleService.startEnemyTurn(state);
-    _applyStatusEffects(statusResult, isPlayer: false);
-  }
-
+  /// 執行敵人行動序列
   /// 執行敵人行動序列
   void _executeEnemyActions() {
     print('戰鬥階段: 敵人執行行動');
@@ -260,50 +222,24 @@ class BattleNotifier extends StateNotifier<BattleState> {
 
     // 應用每個行動的結果
     for (final actionResult in actionResults) {
+      // 先應用到戰鬥狀態
       state = _battleService.applyEnemyActionResult(state, actionResult);
+
+      // 如果行動造成傷害，應用到玩家隊伍
+      if (actionResult.wasExecuted && actionResult.damageDealt > 0) {
+        final partyNotifier = ref.read(partyProvider.notifier);
+        partyNotifier.takeDamage(actionResult.damageDealt);
+        print(
+          '${state.enemy.name} 造成 ${actionResult.damageDealt} 傷害，玩家血量: ${ref.read(partyProvider).sharedHp}',
+        );
+      } else if (actionResult.wasExecuted) {
+        // 沒有傷害的行動訊息
+        print('敵人行動: ${actionResult.message}');
+      }
 
       // 檢查每個行動後是否戰鬥結束
       if (_checkBattleEnd()) return;
     }
-  }
-
-  /// 完成敵人回合
-  void _completeEnemyTurn() {
-    print('戰鬥階段: 敵人回合結束');
-
-    // 處理敵人回合結束狀態效果
-    final statusResult = _statusService.processTurnEnd(
-      state.enemyStatusManager,
-      isPlayer: false,
-    );
-
-    _applyStatusEffects(statusResult, isPlayer: false);
-
-    // 檢查戰鬥是否結束
-    if (_checkBattleEnd()) return;
-
-    // 生成新的行動隊列
-    final newActionQueue = _enemyAIService.generateActionQueue(
-      enemy: state.enemy,
-      playerParty: state.playerParty,
-      turnNumber: state.turnNumber + 1,
-    );
-
-    final enhancedActionQueue = _enemyAIService.adjustActionsByEnemyType(
-      newActionQueue,
-      state.enemy,
-    );
-
-    // 準備下一回合
-    state = _battleService.prepareNextTurn(state);
-    state = state.copyWith(
-      enemyActionQueue: enhancedActionQueue,
-      selectedEnemyAction: null,
-    );
-
-    // 推進到玩家回合
-    _setPhase(BattlePhase.playerTurn);
-    advanceBattlePhase();
   }
 
   /// 處理戰鬥結束
@@ -362,21 +298,178 @@ class BattleNotifier extends StateNotifier<BattleState> {
 
   // ===== 輔助方法 =====
 
-  /// 設置戰鬥階段
-  void _setPhase(BattlePhase phase) {
-    state = state.copyWith(currentPhase: phase);
+  // 設置戰鬥階段並自動處理階段邏輯
+  void _setPhase(BattlePhase newPhase) {
+    if (state.currentPhase == newPhase) return; // 避免重複設置
+
+    final oldPhase = state.currentPhase;
+    state = state.copyWith(currentPhase: newPhase);
+
+    print('戰鬥階段變更: $oldPhase -> $newPhase');
+
+    // 根據新階段執行對應邏輯
+    _handlePhaseTransition(newPhase);
   }
 
-  /// 集中檢查戰鬥是否結束
-  bool _checkBattleEnd() {
-    final battleEndResult = _battleService.checkBattleEnd(state);
+  /// 處理階段轉換邏輯
+  void _handlePhaseTransition(BattlePhase phase) {
+    // 統一在這裡檢查戰鬥是否結束
+    if (_checkBattleEnd()) {
+      _setPhase(BattlePhase.battleEnd);
+      _handleBattleEnd();
+      return;
+    }
 
-    if (battleEndResult.isEnded) {
-      state = _battleService.endBattle(state, battleEndResult.result);
+    switch (phase) {
+      case BattlePhase.playerTurn:
+        _executePlayerTurnStart();
+        break;
+
+      case BattlePhase.enemyTurn:
+        _executeEnemyTurnStart();
+        _executeEnemyActions();
+        _completeEnemyTurn();
+        break;
+
+      case BattlePhase.battleEnd:
+        _handleBattleEnd();
+        break;
+
+      case BattlePhase.preparation:
+      case BattlePhase.victory:
+      case BattlePhase.defeat:
+        // 這些階段不需要額外處理
+        break;
+    }
+  }
+
+  /// 移除原本的 advanceBattlePhase，改用直接的階段轉換
+  void endPlayerTurn() {
+    print('戰鬥階段: 玩家回合結束');
+    if (!_battleService.isPlayerTurn(state)) return;
+
+    _executePlayerTurnEnd();
+    _setPhase(BattlePhase.enemyTurn); // 直接設置階段，讓 _handlePhaseTransition 處理
+  }
+
+  /// 完成敵人回合
+  void _completeEnemyTurn() {
+    print('戰鬥階段: 敵人回合結束');
+
+    _processStatusEffects(isPlayer: false, timing: StatusTiming.turnEnd);
+
+    if (_checkBattleEnd()) return; // 只在必要時檢查
+
+    _prepareNextTurn();
+    _setPhase(BattlePhase.playerTurn);
+  }
+
+  /// 檢查戰鬥是否結束 - 統一入口點
+  bool _checkBattleEnd() {
+    final party = ref.read(partyProvider);
+
+    if (party.sharedHp <= 0) {
+      print('檢測到玩家血量為0，戰鬥結束');
+      state = state.copyWith(
+        currentPhase: BattlePhase.battleEnd,
+        result: BattleResult.defeat,
+      );
+      return true;
+    }
+
+    if (state.enemy.isDead) {
+      print('檢測到敵人死亡，戰鬥結束');
+      state = state.copyWith(
+        currentPhase: BattlePhase.battleEnd,
+        result: BattleResult.victory,
+      );
+      return true;
+    }
+
+    if (state.result == BattleResult.escaped) {
+      print('檢測到玩家逃跑，戰鬥結束');
+      state = state.copyWith(currentPhase: BattlePhase.battleEnd);
       return true;
     }
 
     return false;
+  }
+
+  /// 統一的狀態效果處理方法
+  void _processStatusEffects({
+    required bool isPlayer,
+    required StatusTiming timing,
+  }) {
+    final statusManager = isPlayer
+        ? state.playerStatusManager
+        : state.enemyStatusManager;
+
+    final statusResult = timing == StatusTiming.turnStart
+        ? _statusService.processTurnStart(statusManager, isPlayer: isPlayer)
+        : _statusService.processTurnEnd(statusManager, isPlayer: isPlayer);
+
+    _applyStatusEffects(statusResult, isPlayer: isPlayer);
+    _updateStatusManager(isPlayer: isPlayer, statusManager: statusManager);
+  }
+
+  /// 更新狀態管理器
+  void _updateStatusManager({
+    required bool isPlayer,
+    required StatusEffectManager statusManager,
+  }) {
+    if (isPlayer) {
+      state = state.copyWith(playerStatusManager: statusManager);
+    } else {
+      state = state.copyWith(enemyStatusManager: statusManager);
+    }
+  }
+
+  /// 更新敵人狀態
+  void _updateEnemyState(Enemy newEnemy) {
+    state = state.copyWith(enemy: newEnemy);
+  }
+
+  /// 重構後的執行方法
+  void _executePlayerTurnStart() {
+    print('戰鬥階段: 玩家回合開始');
+
+    // 恢復玩家 Cost
+    final partyNotifier = ref.read(partyProvider.notifier);
+    partyNotifier.startNewTurn();
+    print('BattleProvider: 玩家回合開始，恢復 Cost');
+
+    // 處理回合開始狀態效果
+    _processStatusEffects(isPlayer: true, timing: StatusTiming.turnStart);
+  }
+
+  void _executePlayerTurnEnd() {
+    print('戰鬥階段: 玩家回合結束處理');
+    _processStatusEffects(isPlayer: true, timing: StatusTiming.turnEnd);
+  }
+
+  void _executeEnemyTurnStart() {
+    print('戰鬥階段: 敵人回合開始');
+    _processStatusEffects(isPlayer: false, timing: StatusTiming.turnStart);
+  }
+
+  /// 準備下一回合
+  void _prepareNextTurn() {
+    final newActionQueue = _enemyAIService.generateActionQueue(
+      enemy: state.enemy,
+      playerParty: state.playerParty,
+      turnNumber: state.turnNumber + 1,
+    );
+
+    final enhancedActionQueue = _enemyAIService.adjustActionsByEnemyType(
+      newActionQueue,
+      state.enemy,
+    );
+
+    state = state.copyWith(
+      turnNumber: state.turnNumber + 1,
+      enemyActionQueue: enhancedActionQueue,
+      selectedEnemyAction: null,
+    );
   }
 
   /// 執行敵人的先手攻擊
@@ -406,10 +499,17 @@ class BattleNotifier extends StateNotifier<BattleState> {
 
   /// 對敵人應用效果
   Future<void> _applyEffectToEnemy(EffectResult effectResult) async {
+    print(
+      'BattleProvider: 對敵人應用效果 - 類型: ${effectResult.type}, 數值: ${effectResult.actualValue}',
+    );
+
     switch (effectResult.type) {
       case EffectType.damage:
+        final oldHp = state.enemy.currentHp;
         final newEnemy = state.enemy.takeDamage(effectResult.actualValue);
         state = state.copyWith(enemy: newEnemy);
+
+        print('BattleProvider: 敵人受到傷害 - 血量: $oldHp -> ${newEnemy.currentHp}');
 
         final newStats = state.statistics.copyWith(
           totalDamageDealt:
@@ -423,23 +523,31 @@ class BattleNotifier extends StateNotifier<BattleState> {
           effectResult.modificationReasons,
         );
         if (statusId != null) {
+          print('BattleProvider: 對敵人施加狀態效果: $statusId');
           await _applyStatusEffectToEnemy(statusId);
         }
         break;
 
       default:
+        print('BattleProvider: 未處理的敵人效果類型: ${effectResult.type}');
         break;
     }
   }
 
   /// 對隊伍應用效果
   Future<void> _applyEffectToParty(EffectResult effectResult) async {
+    print(
+      'BattleProvider: 對隊伍應用效果 - 類型: ${effectResult.type}, 數值: ${effectResult.actualValue}',
+    );
+
     switch (effectResult.type) {
       case EffectType.heal:
+        print('BattleProvider: 隊伍回復生命值: ${effectResult.actualValue}');
         _applyPlayerHotHealing(effectResult.actualValue);
         break;
 
       case EffectType.damage:
+        print('BattleProvider: 隊伍受到傷害: ${effectResult.actualValue}');
         _applyPlayerDotDamage(effectResult.actualValue);
         break;
 
@@ -448,11 +556,13 @@ class BattleNotifier extends StateNotifier<BattleState> {
           effectResult.modificationReasons,
         );
         if (statusId != null) {
+          print('BattleProvider: 對隊伍施加狀態效果: $statusId');
           await _applyStatusEffectToPlayer(statusId);
         }
         break;
 
       default:
+        print('BattleProvider: 未處理的隊伍效果類型: ${effectResult.type}');
         break;
     }
   }
@@ -547,6 +657,9 @@ class BattleNotifier extends StateNotifier<BattleState> {
     StatusEffectResult statusResult, {
     required bool isPlayer,
   }) {
+    final target = isPlayer ? "玩家" : "敵人";
+
+    // 處理DOT傷害
     if (statusResult.dotDamage > 0) {
       if (isPlayer) {
         _applyPlayerDotDamage(statusResult.dotDamage);
@@ -557,8 +670,10 @@ class BattleNotifier extends StateNotifier<BattleState> {
         );
         state = result.newState;
       }
+      print('⚡ $target 受到 ${statusResult.dotDamage} 點DOT傷害');
     }
 
+    // 處理HOT治療
     if (statusResult.hotHealing > 0) {
       if (isPlayer) {
         _applyPlayerHotHealing(statusResult.hotHealing);
@@ -569,6 +684,14 @@ class BattleNotifier extends StateNotifier<BattleState> {
         );
         state = result.newState;
       }
+      print('💚 $target 回復 ${statusResult.hotHealing} 點HOT生命值');
+    }
+
+    // 顯示觸發的狀態效果
+    if (statusResult.triggeredEffects.isNotEmpty) {
+      print('🔥 觸發狀態效果: ${statusResult.triggeredEffects.join(", ")}');
+    } else if (statusResult.dotDamage == 0 && statusResult.hotHealing == 0) {
+      print('📝 狀態效果處理完成，無DOT/HOT觸發');
     }
   }
 
@@ -580,14 +703,16 @@ class BattleNotifier extends StateNotifier<BattleState> {
 
   /// 應用玩家 DOT 傷害
   void _applyPlayerDotDamage(int damage) {
-    // TODO: 與 PartyProvider 整合
-    print('玩家受到 $damage 點 DOT 傷害');
+    final partyNotifier = ref.read(partyProvider.notifier);
+    partyNotifier.takeDamage(damage);
+    print('玩家受到 $damage 點 DOT 傷害，當前血量: ${ref.read(partyProvider).sharedHp}');
   }
 
   /// 應用玩家 HOT 治療
   void _applyPlayerHotHealing(int healing) {
-    // TODO: 與 PartyProvider 整合
-    print('玩家回復 $healing 點生命值');
+    final partyNotifier = ref.read(partyProvider.notifier);
+    partyNotifier.heal(healing);
+    print('玩家回復 $healing 點生命值，當前血量: ${ref.read(partyProvider).sharedHp}');
   }
 
   /// 重置戰鬥狀態
@@ -654,6 +779,9 @@ class BattleNotifier extends StateNotifier<BattleState> {
   void useItem(dynamic item) {}
 }
 
+/// 狀態效果觸發時機
+enum StatusTiming { turnStart, turnEnd }
+
 /// 戰鬥配置類
 class BattleConfiguration {
   final List<Character> playerParty;
@@ -676,5 +804,6 @@ final battleProvider = StateNotifierProvider<BattleNotifier, BattleState>((
     enemyActionService: EnemyActionService(),
     statusService: StatusService(),
     enemyAIService: EnemyAIService(),
+    ref: ref, // 傳入 ref
   );
 });

@@ -274,7 +274,7 @@ class EnemyActionQueue extends StatelessWidget {
 class ActionDetailDialog extends StatelessWidget {
   final EnemyAction action;
 
-  const ActionDetailDialog({Key? key, required this.action}) : super(key: key);
+  const ActionDetailDialog({super.key, required this.action});
 
   @override
   Widget build(BuildContext context) {
@@ -367,7 +367,7 @@ class ActionDetailDialog extends StatelessWidget {
                     ],
                   ),
                 );
-              }).toList(),
+              }),
               const SizedBox(height: 8),
             ],
 

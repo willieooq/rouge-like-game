@@ -94,9 +94,12 @@ class BattleService {
     String skillId,
     String casterId,
   ) {
+    print('BattleService: 開始執行技能 $skillId，施法者: $casterId');
+
     // 1. 載入技能數據
     final skill = SkillService.getSkill(skillId);
     if (skill == null) {
+      print('BattleService: 技能不存在 - $skillId');
       return SkillExecutionResult(
         skillId: skillId,
         casterId: casterId,
@@ -106,18 +109,23 @@ class BattleService {
       );
     }
 
+    print('BattleService: 找到技能 ${skill.name}，類型: ${skill.type}');
+
     // 2. 找到施法者
     Character? caster;
     try {
       caster = state.playerParty.firstWhere((c) => c.id == casterId);
+      print('BattleService: 找到施法者 ${caster.name}，攻擊力: ${caster.attackPower}');
     } catch (e) {
       // 如果找不到指定的施法者，使用隊伍中的第一個角色（如果存在）
       if (state.playerParty.isNotEmpty) {
         caster = state.playerParty.first;
+        print('BattleService: 找不到指定施法者，使用 ${caster.name}');
       }
     }
 
     if (caster == null) {
+      print('BattleService: 無可用的施法者');
       return SkillExecutionResult(
         skillId: skillId,
         casterId: casterId,
@@ -129,14 +137,22 @@ class BattleService {
 
     // 3. 計算技能的原始效果意圖
     final intents = _calculateSkillIntents(skill, caster, state);
+    print('BattleService: 計算出 ${intents.length} 個效果意圖');
 
     // 4. 對每個目標處理效果鏈
     final effectChains = <EffectChain>[];
     for (final intent in intents) {
+      print(
+        'BattleService: 處理效果鏈 - 目標: ${intent.targetId}, 類型: ${intent.intent.type}, 基礎值: ${intent.intent.baseValue}',
+      );
       final chain = _processEffectChain(state, intent);
       effectChains.add(chain);
+      print(
+        'BattleService: 效果鏈處理完成 - 實際值: ${chain.processedResult.actualValue}',
+      );
     }
 
+    print('BattleService: 技能執行完成，成功: true');
     return SkillExecutionResult(
       skillId: skillId,
       casterId: casterId,

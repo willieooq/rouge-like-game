@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 class ItemSelectionSheet extends StatelessWidget {
   final Function(dynamic) onItemSelected;
 
-  const ItemSelectionSheet({Key? key, required this.onItemSelected})
-      : super(key: key);
+  const ItemSelectionSheet({super.key, required this.onItemSelected});
 
   @override
   Widget build(BuildContext context) {

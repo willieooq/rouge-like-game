@@ -32,6 +32,45 @@ class _BattleScreenState extends ConsumerState<BattleScreen> {
     _initializeBattle();
   }
 
+  // Future<void> _initializeBattle() async {
+  //   try {
+  //     // 初始化敵人服務
+  //     await EnemyService.instance.initialize();
+  //
+  //     // 生成測試敵人遭遇 - 只生成一個敵人
+  //     final enemies = EnemyService.instance.generateRandomEncounter(
+  //       playerLevel: 1,
+  //       maxEnemies: 1, // 只生成一個敵人
+  //       eliteChance: 0.3,
+  //       bossChance: 0.0,
+  //     );
+  //
+  //     // 啟動戰鬥
+  //     ref.read(battleProvider.notifier).startBattle(enemies);
+  //   } catch (e) {
+  //     print('初始化戰鬥失敗: $e');
+  //     // 創建默認敵人作為後備
+  //     final defaultEnemies = [
+  //       Enemy(
+  //         id: 'test_enemy',
+  //         name: '測試敵人',
+  //         type: EnemyType.normal,
+  //         aiBehavior: AIBehavior.aggressive,
+  //         maxHp: 50,
+  //         currentHp: 50,
+  //         attack: 10,
+  //         defense: 2,
+  //         speed: 8,
+  //         iconPath: '',
+  //         description: '用於測試的敵人',
+  //         skillIds: [],
+  //         expReward: 15,
+  //         goldReward: 8,
+  //       ),
+  //     ];
+  //     ref.read(battleProvider.notifier).startBattle(defaultEnemies);
+  //   }
+  // }
   Future<void> _initializeBattle() async {
     try {
       // 初始化敵人服務
@@ -49,26 +88,28 @@ class _BattleScreenState extends ConsumerState<BattleScreen> {
       ref.read(battleProvider.notifier).startBattle(enemies);
     } catch (e) {
       print('初始化戰鬥失敗: $e');
-      // 創建默認敵人作為後備
-      final defaultEnemies = [
+      // 創建狀態測試木樁作為後備
+      final testDummy = [
         Enemy(
-          id: 'test_enemy',
-          name: '測試敵人',
+          id: 'status_test_dummy',
+          name: '狀態測試木樁',
           type: EnemyType.normal,
-          aiBehavior: AIBehavior.aggressive,
-          maxHp: 50,
-          currentHp: 50,
-          attack: 10,
-          defense: 2,
-          speed: 8,
+          aiBehavior: AIBehavior.balanced,
+          maxHp: 800,
+          currentHp: 800,
+          attack: 3,
+          defense: 1,
+          speed: 5,
           iconPath: '',
-          description: '用於測試的敵人',
-          skillIds: [],
-          expReward: 15,
-          goldReward: 8,
+          description: '專門用於測試狀態效果的高血量木樁',
+          skillIds: ['weak_attack'],
+          expReward: 5,
+          goldReward: 3,
+          primaryColor: '#8B4513',
+          secondaryColor: '#DEB887',
         ),
       ];
-      ref.read(battleProvider.notifier).startBattle(defaultEnemies);
+      ref.read(battleProvider.notifier).startBattle(testDummy);
     }
   }
 
@@ -185,33 +226,42 @@ class _BattleScreenState extends ConsumerState<BattleScreen> {
                     ),
 
                     // 戰鬥操作按鈕（簡化版）
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: partyNotifier.canUseSkill(2)
-                                ? () => _performAttack(2)
-                                : null,
-                            child: const Text('攻擊 (2)'),
+                    // 戰鬥操作區域 - 修正版
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: ElevatedButton(
+                        onPressed:
+                            battleState.isPlayerTurn &&
+                                battleState.isBattleOngoing
+                            ? () {
+                                print('UI: 玩家點擊結束回合按鈕');
+                                ref
+                                    .read(battleProvider.notifier)
+                                    .endPlayerTurn();
+                              }
+                            : null, // 非玩家回合時按鈕不可用
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: battleState.isPlayerTurn
+                              ? Colors.red
+                              : Colors.grey,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: partyNotifier.canUseSkill(4)
-                                ? () => _performAttack(4)
-                                : null,
-                            child: const Text('重擊 (4)'),
+                        child: Text(
+                          battleState.isPlayerTurn ? '結束回合' : '等待回合',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => partyNotifier.startNewTurn(),
-                            child: const Text('新回合'),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

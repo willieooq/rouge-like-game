@@ -15,29 +15,35 @@ class CharacterProvider extends StateNotifier<Character> {
 
   // 使用技能的主要方法（更新版 - 異步）
   Future<bool> useSkill(String skillId) async {
-    print("character used skill $skillId");
+    print('CharacterProvider: ${state.name} 開始使用技能 $skillId');
+
     final skillCost = SkillService.getSkillCost(skillId);
     final partyNotifier = ref.read(partyProvider.notifier);
 
     // 檢查Party是否有足夠Cost
     if (!partyNotifier.canUseSkill(skillCost)) {
+      print('CharacterProvider: cost 不足，無法使用技能');
       return false;
     }
 
     // 扣除Party Cost
     partyNotifier.useSkill(skillCost);
+    print('CharacterProvider: 扣除 $skillCost cost');
 
     // 委託給 BattleProvider 執行實際技能效果（使用 await）
     final battleNotifier = ref.read(battleProvider.notifier);
+    print('CharacterProvider: 開始調用 BattleProvider.executePlayerSkill');
+
     final result = await battleNotifier.executePlayerSkill(
       skillId,
       casterId: state.id,
     );
+    print('CharacterProvider: BattleProvider 返回結果，成功: ${result.success}');
 
     // 檢查是否需要自動結束回合
     final party = ref.read(partyProvider);
     if (SkillService.shouldAutoEndTurn(party.currentTurnCost)) {
-      print("自動結束回合");
+      print('CharacterProvider: 觸發自動結束回合');
       battleNotifier.endPlayerTurn();
     }
 
