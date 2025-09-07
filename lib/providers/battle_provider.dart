@@ -1,21 +1,24 @@
-// lib/providers/battle_provider.dart (狀態機重構版)
+// lib/providers/battle_provider.dart (修正版 - 配合新EnemyService)
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rouge_project/providers/party_provider.dart';
-import 'package:rouge_project/services/enemy_ai_service.dart';
 
 import '../core/interfaces/i_battle_service.dart';
+import '../core/interfaces/i_enemy_service.dart';
+import '../core/interfaces/i_status_service.dart';
 import '../models/battle/battle_state.dart';
 import '../models/character/character.dart';
 import '../models/enemy/enemy.dart';
+import '../models/enemy/enemy_action.dart';
 import '../models/party/party.dart';
 import '../models/skill/skill_execution_result.dart';
 import '../models/status/status_effect.dart';
-import '../services/battle_service_impl.dart'; // 更新為實現類
-import '../services/enemy_action_service.dart';
-import '../services/status_service.dart';
+import '../services/battle_service_impl.dart';
+import '../services/enemy_service_impl.dart';
+import '../services/status_service_impl.dart';
 import '../shared/beans/battle/battle_configuration.dart';
+import '../shared/beans/status/status_effect_result.dart';
 
-/// 戰鬥狀態管理 Provider (狀態機重構版)
+/// 戰鬥狀態管理 Provider (修正版)
 ///
 /// 職責：
 /// - 管理戰鬥狀態機
@@ -23,21 +26,18 @@ import '../shared/beans/battle/battle_configuration.dart';
 /// - 集中處理戰鬥結束邏輯
 class BattleNotifier extends StateNotifier<BattleState> {
   final IBattleService _battleService;
-  final EnemyActionService _enemyActionService;
-  final StatusService _statusService;
-  final EnemyAIService _enemyAIService;
-  final Ref ref; // 添加 ref 字段
+  final IEnemyService _enemyService; // 使用統一的敵人服務接口
+  final IStatusService _statusService;
+  final Ref ref;
 
   BattleNotifier({
     required IBattleService battleService,
-    required EnemyActionService enemyActionService,
-    required StatusService statusService,
-    required EnemyAIService enemyAIService,
-    required this.ref, // 添加 ref 參數
+    required IEnemyService enemyService, // 更新參數類型
+    required IStatusService statusService,
+    required this.ref,
   }) : _battleService = battleService,
-       _enemyActionService = enemyActionService,
+       _enemyService = enemyService,
        _statusService = statusService,
-       _enemyAIService = enemyAIService,
        super(BattleState.initial());
 
   /// 開始戰鬥 (為了與現有代碼兼容)
@@ -59,28 +59,37 @@ class BattleNotifier extends StateNotifier<BattleState> {
     initializeBattle(party: party, enemy: enemy, canEscape: true);
   }
 
-  /// 初始化戰鬥 - 修正參數名稱
+  /// 初始化戰鬥 - 使用新的統一服務
   void initializeBattle({
-    required Party party, // 改為 Party 物件
+    required Party party,
     required Enemy enemy,
     bool canEscape = true,
   }) {
     print('戰鬥階段: 初始化戰鬥');
 
-    // 生成敵人行動隊列
-    final actionQueue = _enemyAIService.generateActionQueue(
+    // 生成敵人行動隊列 - 使用新的返回類型
+    final actionQueueResult = _enemyService.generateActionQueue(
       enemy: enemy,
-      playerParty: party.characters, // 使用 party.characters
+      playerParty: party.characters,
       turnNumber: 1,
     );
 
-    final enhancedActionQueue = _enemyAIService.adjustActionsByEnemyType(
-      actionQueue,
+    // 檢查結果是否成功
+    if (!actionQueueResult.success) {
+      print('行動隊列生成失敗: ${actionQueueResult.message}');
+      // 使用空的行動隊列作為 fallback
+      state = state.copyWith(enemyActionQueue: <EnemyAction>[]);
+      return;
+    }
+
+    // 使用統一服務調整行動
+    final enhancedActionQueue = _enemyService.adjustActionsByEnemyType(
+      actionQueueResult.actions, // 從結果中獲取行動列表
       enemy,
     );
 
     final battleConfig = BattleConfiguration(
-      party: party, // 正確使用 Party 物件
+      party: party,
       enemy: enemy,
       canEscape: canEscape,
     );
@@ -204,18 +213,19 @@ class BattleNotifier extends StateNotifier<BattleState> {
     state = result.newState;
 
     // 逃跑成功會觸發戰鬥結束
-    if (result.success) {
+    if (result.actionSuccess) {
       advanceBattlePhase();
     }
 
-    return result.success;
+    return result.actionSuccess;
   }
 
-  /// 執行敵人行動序列
+  /// 執行敵人行動序列 - 使用統一服務
   void _executeEnemyActions() {
     print('戰鬥階段: 敵人執行行動');
 
-    final actionResults = _enemyActionService.executeActionQueue(
+    // 使用統一的敵人服務執行行動
+    final actionResults = _enemyService.executeActionQueue(
       state.enemyActionQueue,
       state.selectedEnemyAction,
       state.enemy,
@@ -250,7 +260,6 @@ class BattleNotifier extends StateNotifier<BattleState> {
     final battleEndResult = _battleService.checkBattleEnd(state);
 
     switch (battleEndResult.resultType) {
-      // 使用 resultType 而非 result
       case 'victory':
         print('戰鬥結果: 玩家勝利');
         _handleVictory();
@@ -449,18 +458,20 @@ class BattleNotifier extends StateNotifier<BattleState> {
     _processStatusEffects(isPlayer: false, timing: StatusTiming.turnStart);
   }
 
-  /// 準備下一回合 - 修正屬性名稱
+  /// 準備下一回合 - 使用新的統一服務
   void _prepareNextTurn() {
-    final newActionQueue = _enemyAIService.generateActionQueue(
+    final actionQueueResult = _enemyService.generateActionQueue(
       enemy: state.enemy,
-      playerParty: state.party.characters, // 使用 party.characters
+      playerParty: state.party.characters,
       turnNumber: state.turnNumber + 1,
     );
 
-    final enhancedActionQueue = _enemyAIService.adjustActionsByEnemyType(
-      newActionQueue,
-      state.enemy,
-    );
+    final enhancedActionQueue = actionQueueResult.success
+        ? _enemyService.adjustActionsByEnemyType(
+            actionQueueResult.actions,
+            state.enemy,
+          )
+        : <EnemyAction>[]; // fallback 以防失敗
 
     state = state.copyWith(
       turnNumber: state.turnNumber + 1,
@@ -779,16 +790,19 @@ class BattleNotifier extends StateNotifier<BattleState> {
 /// 狀態效果觸發時機
 enum StatusTiming { turnStart, turnEnd }
 
-/// 戰鬥 Provider 工廠
+/// Enemy Service Provider（新增）
+final enemyServiceProvider = Provider<IEnemyService>((ref) {
+  return EnemyServiceImpl.instance;
+});
+
+/// 戰鬥 Provider 工廠 - 修正版
 final battleProvider = StateNotifierProvider<BattleNotifier, BattleState>((
   ref,
 ) {
   return BattleNotifier(
-    battleService: BattleServiceImpl(),
-    // 使用實現類
-    enemyActionService: EnemyActionService(),
-    statusService: StatusService(),
-    enemyAIService: EnemyAIService(),
+    battleService: BattleServiceImpl(), // 可以考慮也改為 Provider
+    enemyService: ref.watch(enemyServiceProvider), // 使用 Provider 依賴注入
+    statusService: StatusServiceImpl(), // 可以考慮也改為 Provider
     ref: ref,
   );
 });

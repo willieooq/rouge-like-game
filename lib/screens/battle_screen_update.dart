@@ -8,7 +8,7 @@ import '../models/enemy/enemy.dart';
 import '../providers/battle_provider.dart';
 import '../providers/operation_mode_provider.dart';
 import '../providers/party_provider.dart';
-import '../services/enemy_service.dart';
+import '../services/enemy_service_impl.dart';
 import '../widgets/battle/enemy_action_queue.dart';
 import '../widgets/cost_dots.dart';
 import '../widgets/enemy/enemy_renderer.dart';
@@ -74,10 +74,10 @@ class _BattleScreenState extends ConsumerState<BattleScreen> {
   Future<void> _initializeBattle() async {
     try {
       // 初始化敵人服務
-      await EnemyService.instance.initialize();
+      await EnemyServiceImpl.instance.initialize();
 
       // 生成測試敵人遭遇 - 只生成一個敵人
-      final enemies = EnemyService.instance.generateRandomEncounter(
+      final enemies = EnemyServiceImpl.instance.generateRandomEncounter(
         playerLevel: 1,
         maxEnemies: 1, // 只生成一個敵人
         eliteChance: 0.3,
@@ -85,7 +85,7 @@ class _BattleScreenState extends ConsumerState<BattleScreen> {
       );
 
       // 啟動戰鬥
-      ref.read(battleProvider.notifier).startBattle(enemies);
+      ref.read(battleProvider.notifier).startBattle(enemies.enemies);
     } catch (e) {
       print('初始化戰鬥失敗: $e');
       // 創建狀態測試木樁作為後備

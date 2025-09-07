@@ -72,7 +72,7 @@ class BattleServiceImpl implements IBattleService {
 
     return BattleActionResult(
       newState: newState,
-      success: true,
+      actionSuccess: true,
       message: '對 ${state.enemy.name} 造成 $actualDamage 點傷害',
     );
   }
@@ -205,7 +205,7 @@ class BattleServiceImpl implements IBattleService {
 
     return BattleActionResult(
       newState: newState,
-      success: true,
+      actionSuccess: true,
       message: '${state.enemy.name} 受到 $actualDamage 點傷害',
     );
   }
@@ -217,7 +217,7 @@ class BattleServiceImpl implements IBattleService {
 
     return BattleActionResult(
       newState: newState,
-      success: true,
+      actionSuccess: true,
       message: '${state.enemy.name} 恢復了 $healing 點生命值',
     );
   }
@@ -228,7 +228,7 @@ class BattleServiceImpl implements IBattleService {
     // 這裡是簡化實現，實際會根據具體的先手技能來處理
     return BattleActionResult(
       newState: state,
-      success: true,
+      actionSuccess: true,
       message: '${state.enemy.name} 發動了先手攻擊！',
     );
   }
@@ -267,13 +267,13 @@ class BattleServiceImpl implements IBattleService {
       final newState = state.copyWith(result: BattleResult.escaped);
       return BattleActionResult(
         newState: newState,
-        success: true,
+        actionSuccess: true,
         message: '成功逃離了戰鬥！',
       );
     } else {
       return BattleActionResult(
         newState: state,
-        success: false,
+        actionSuccess: false,
         message: '逃跑失敗！',
       );
     }
@@ -357,7 +357,7 @@ class BattleServiceImpl implements IBattleService {
 
     return BattleActionResult(
       newState: newState,
-      success: true,
+      actionSuccess: true,
       message: '成功無效化了敵人的行動',
     );
   }
@@ -367,7 +367,7 @@ class BattleServiceImpl implements IBattleService {
     // 這裡是為了兼容舊接口的簡化實現
     return BattleActionResult(
       newState: state,
-      success: true,
+      actionSuccess: true,
       message: '使用了技能：$skillId',
     );
   }
