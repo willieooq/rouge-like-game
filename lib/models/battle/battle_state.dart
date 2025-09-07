@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../character/character.dart';
 import '../enemy/enemy.dart';
 import '../enemy/enemy_action.dart';
+import '../party/party.dart';
 import '../status/status_effect.dart';
 
 part 'battle_state.freezed.dart';
@@ -35,7 +36,7 @@ abstract class BattleState with _$BattleState {
     required bool playerHasFirstTurn,
 
     // 參戰單位
-    required List<Character> playerParty,
+    required Party party,
     required Enemy enemy, // 單個敵人
     // 狀態效果管理器
     required StatusEffectManager playerStatusManager,
@@ -68,7 +69,13 @@ abstract class BattleState with _$BattleState {
       result: BattleResult.ongoing,
       turnNumber: 1,
       playerHasFirstTurn: true,
-      playerParty: [],
+      party: new Party(
+        characters: [],
+        sharedHp: 9999,
+        maxHp: 9999,
+        currentTurnCost: 10,
+        maxTurnCost: 10,
+      ),
       enemy: _createEmptyEnemy(),
       playerStatusManager: StatusEffectManager(),
       enemyStatusManager: StatusEffectManager(),

@@ -35,7 +35,7 @@ class BattleServiceImpl implements IBattleService {
       turnNumber: 1,
       playerHasFirstTurn: !hasFirstStrike,
       party: config.party,
-      // 直接使用 Party 模型
+      // 使用 Party 模型
       enemy: config.enemy,
       playerStatusManager: StatusEffectManager(),
       enemyStatusManager: StatusEffectManager(),
@@ -349,7 +349,30 @@ class BattleServiceImpl implements IBattleService {
     return state.isPlayerTurn && state.isBattleOngoing;
   }
 
-  // ===== 私有方法，將原有的完整實現複製過來 =====
+  // ===== 私有方法 - 所有 BattleActionResult 都正確包含 newState =====
+
+  /// 無效化敵人行動
+  BattleActionResult _nullifyEnemyAction(BattleState state, String actionId) {
+    final newState = selectEnemyActionToNullify(state, actionId);
+
+    return BattleActionResult(
+      newState: newState,
+      success: true,
+      message: '成功無效化了敵人的行動',
+    );
+  }
+
+  /// 執行玩家技能（舊的簡化版本）
+  BattleActionResult _executePlayerSkill(BattleState state, String skillId) {
+    // 這裡是為了兼容舊接口的簡化實現
+    return BattleActionResult(
+      newState: state,
+      success: true,
+      message: '使用了技能：$skillId',
+    );
+  }
+
+  // ===== 其他私有方法保持不變 =====
 
   /// 計算技能的原始效果意圖
   List<TargetedIntent> _calculateSkillIntents(
@@ -650,8 +673,6 @@ class BattleServiceImpl implements IBattleService {
     }
   }
 
-  // [為了簡潔，省略敵人行動生成的具體實現，實際需要從原檔案複製]
-
   /// 生成攻擊型行動序列
   List<EnemyAction> _generateAggressiveActions(Enemy enemy) {
     return [
@@ -742,26 +763,6 @@ class BattleServiceImpl implements IBattleService {
         skillId: 'heal_self',
       ),
     ];
-  }
-
-  /// 無效化敵人行動
-  BattleActionResult _nullifyEnemyAction(BattleState state, String actionId) {
-    final newState = selectEnemyActionToNullify(state, actionId);
-
-    return BattleActionResult(
-      newState: newState,
-      success: true,
-      message: '成功無效化了敵人的行動',
-    );
-  }
-
-  BattleActionResult _executePlayerSkill(BattleState state, String skillId) {
-    // 這裡是為了兼容舊接口的簡化實現
-    return BattleActionResult(
-      newState: state,
-      success: true,
-      message: '使用了技能：$skillId',
-    );
   }
 
   /// 計算傷害

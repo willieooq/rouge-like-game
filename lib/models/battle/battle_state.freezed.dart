@@ -16,7 +16,7 @@ mixin _$BattleState {
 
 // 基本戰鬥狀態
  BattlePhase get currentPhase; BattleResult get result; int get turnNumber; bool get playerHasFirstTurn;// 參戰單位
- List<Character> get playerParty; Enemy get enemy;// 單個敵人
+ Party get party; Enemy get enemy;// 單個敵人
 // 狀態效果管理器
  StatusEffectManager get playerStatusManager; StatusEffectManager get enemyStatusManager;// 敵人行動系統
  List<EnemyAction> get enemyActionQueue; int get currentEnemyActionIndex; EnemyAction? get selectedEnemyAction;// 戰鬥統計
@@ -33,16 +33,16 @@ $BattleStateCopyWith<BattleState> get copyWith => _$BattleStateCopyWithImpl<Batt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BattleState&&(identical(other.currentPhase, currentPhase) || other.currentPhase == currentPhase)&&(identical(other.result, result) || other.result == result)&&(identical(other.turnNumber, turnNumber) || other.turnNumber == turnNumber)&&(identical(other.playerHasFirstTurn, playerHasFirstTurn) || other.playerHasFirstTurn == playerHasFirstTurn)&&const DeepCollectionEquality().equals(other.playerParty, playerParty)&&(identical(other.enemy, enemy) || other.enemy == enemy)&&(identical(other.playerStatusManager, playerStatusManager) || other.playerStatusManager == playerStatusManager)&&(identical(other.enemyStatusManager, enemyStatusManager) || other.enemyStatusManager == enemyStatusManager)&&const DeepCollectionEquality().equals(other.enemyActionQueue, enemyActionQueue)&&(identical(other.currentEnemyActionIndex, currentEnemyActionIndex) || other.currentEnemyActionIndex == currentEnemyActionIndex)&&(identical(other.selectedEnemyAction, selectedEnemyAction) || other.selectedEnemyAction == selectedEnemyAction)&&(identical(other.statistics, statistics) || other.statistics == statistics)&&(identical(other.canEscape, canEscape) || other.canEscape == canEscape)&&(identical(other.baseEscapeChance, baseEscapeChance) || other.baseEscapeChance == baseEscapeChance)&&(identical(other.selectedEnemy, selectedEnemy) || other.selectedEnemy == selectedEnemy)&&(identical(other.targetedEnemy, targetedEnemy) || other.targetedEnemy == targetedEnemy)&&(identical(other.selectedCharacter, selectedCharacter) || other.selectedCharacter == selectedCharacter)&&(identical(other.currentActionPoints, currentActionPoints) || other.currentActionPoints == currentActionPoints)&&(identical(other.maxActionPoints, maxActionPoints) || other.maxActionPoints == maxActionPoints));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BattleState&&(identical(other.currentPhase, currentPhase) || other.currentPhase == currentPhase)&&(identical(other.result, result) || other.result == result)&&(identical(other.turnNumber, turnNumber) || other.turnNumber == turnNumber)&&(identical(other.playerHasFirstTurn, playerHasFirstTurn) || other.playerHasFirstTurn == playerHasFirstTurn)&&(identical(other.party, party) || other.party == party)&&(identical(other.enemy, enemy) || other.enemy == enemy)&&(identical(other.playerStatusManager, playerStatusManager) || other.playerStatusManager == playerStatusManager)&&(identical(other.enemyStatusManager, enemyStatusManager) || other.enemyStatusManager == enemyStatusManager)&&const DeepCollectionEquality().equals(other.enemyActionQueue, enemyActionQueue)&&(identical(other.currentEnemyActionIndex, currentEnemyActionIndex) || other.currentEnemyActionIndex == currentEnemyActionIndex)&&(identical(other.selectedEnemyAction, selectedEnemyAction) || other.selectedEnemyAction == selectedEnemyAction)&&(identical(other.statistics, statistics) || other.statistics == statistics)&&(identical(other.canEscape, canEscape) || other.canEscape == canEscape)&&(identical(other.baseEscapeChance, baseEscapeChance) || other.baseEscapeChance == baseEscapeChance)&&(identical(other.selectedEnemy, selectedEnemy) || other.selectedEnemy == selectedEnemy)&&(identical(other.targetedEnemy, targetedEnemy) || other.targetedEnemy == targetedEnemy)&&(identical(other.selectedCharacter, selectedCharacter) || other.selectedCharacter == selectedCharacter)&&(identical(other.currentActionPoints, currentActionPoints) || other.currentActionPoints == currentActionPoints)&&(identical(other.maxActionPoints, maxActionPoints) || other.maxActionPoints == maxActionPoints));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,currentPhase,result,turnNumber,playerHasFirstTurn,const DeepCollectionEquality().hash(playerParty),enemy,playerStatusManager,enemyStatusManager,const DeepCollectionEquality().hash(enemyActionQueue),currentEnemyActionIndex,selectedEnemyAction,statistics,canEscape,baseEscapeChance,selectedEnemy,targetedEnemy,selectedCharacter,currentActionPoints,maxActionPoints]);
+int get hashCode => Object.hashAll([runtimeType,currentPhase,result,turnNumber,playerHasFirstTurn,party,enemy,playerStatusManager,enemyStatusManager,const DeepCollectionEquality().hash(enemyActionQueue),currentEnemyActionIndex,selectedEnemyAction,statistics,canEscape,baseEscapeChance,selectedEnemy,targetedEnemy,selectedCharacter,currentActionPoints,maxActionPoints]);
 
 @override
 String toString() {
-  return 'BattleState(currentPhase: $currentPhase, result: $result, turnNumber: $turnNumber, playerHasFirstTurn: $playerHasFirstTurn, playerParty: $playerParty, enemy: $enemy, playerStatusManager: $playerStatusManager, enemyStatusManager: $enemyStatusManager, enemyActionQueue: $enemyActionQueue, currentEnemyActionIndex: $currentEnemyActionIndex, selectedEnemyAction: $selectedEnemyAction, statistics: $statistics, canEscape: $canEscape, baseEscapeChance: $baseEscapeChance, selectedEnemy: $selectedEnemy, targetedEnemy: $targetedEnemy, selectedCharacter: $selectedCharacter, currentActionPoints: $currentActionPoints, maxActionPoints: $maxActionPoints)';
+  return 'BattleState(currentPhase: $currentPhase, result: $result, turnNumber: $turnNumber, playerHasFirstTurn: $playerHasFirstTurn, party: $party, enemy: $enemy, playerStatusManager: $playerStatusManager, enemyStatusManager: $enemyStatusManager, enemyActionQueue: $enemyActionQueue, currentEnemyActionIndex: $currentEnemyActionIndex, selectedEnemyAction: $selectedEnemyAction, statistics: $statistics, canEscape: $canEscape, baseEscapeChance: $baseEscapeChance, selectedEnemy: $selectedEnemy, targetedEnemy: $targetedEnemy, selectedCharacter: $selectedCharacter, currentActionPoints: $currentActionPoints, maxActionPoints: $maxActionPoints)';
 }
 
 
@@ -53,11 +53,11 @@ abstract mixin class $BattleStateCopyWith<$Res>  {
   factory $BattleStateCopyWith(BattleState value, $Res Function(BattleState) _then) = _$BattleStateCopyWithImpl;
 @useResult
 $Res call({
- BattlePhase currentPhase, BattleResult result, int turnNumber, bool playerHasFirstTurn, List<Character> playerParty, Enemy enemy, StatusEffectManager playerStatusManager, StatusEffectManager enemyStatusManager, List<EnemyAction> enemyActionQueue, int currentEnemyActionIndex, EnemyAction? selectedEnemyAction, BattleStatistics statistics, bool canEscape, double baseEscapeChance, Enemy? selectedEnemy, Enemy? targetedEnemy, Character? selectedCharacter, int currentActionPoints, int maxActionPoints
+ BattlePhase currentPhase, BattleResult result, int turnNumber, bool playerHasFirstTurn, Party party, Enemy enemy, StatusEffectManager playerStatusManager, StatusEffectManager enemyStatusManager, List<EnemyAction> enemyActionQueue, int currentEnemyActionIndex, EnemyAction? selectedEnemyAction, BattleStatistics statistics, bool canEscape, double baseEscapeChance, Enemy? selectedEnemy, Enemy? targetedEnemy, Character? selectedCharacter, int currentActionPoints, int maxActionPoints
 });
 
 
-$EnemyCopyWith<$Res> get enemy;$EnemyActionCopyWith<$Res>? get selectedEnemyAction;$BattleStatisticsCopyWith<$Res> get statistics;$EnemyCopyWith<$Res>? get selectedEnemy;$EnemyCopyWith<$Res>? get targetedEnemy;$CharacterCopyWith<$Res>? get selectedCharacter;
+$PartyCopyWith<$Res> get party;$EnemyCopyWith<$Res> get enemy;$EnemyActionCopyWith<$Res>? get selectedEnemyAction;$BattleStatisticsCopyWith<$Res> get statistics;$EnemyCopyWith<$Res>? get selectedEnemy;$EnemyCopyWith<$Res>? get targetedEnemy;$CharacterCopyWith<$Res>? get selectedCharacter;
 
 }
 /// @nodoc
@@ -70,14 +70,14 @@ class _$BattleStateCopyWithImpl<$Res>
 
 /// Create a copy of BattleState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? currentPhase = null,Object? result = null,Object? turnNumber = null,Object? playerHasFirstTurn = null,Object? playerParty = null,Object? enemy = null,Object? playerStatusManager = null,Object? enemyStatusManager = null,Object? enemyActionQueue = null,Object? currentEnemyActionIndex = null,Object? selectedEnemyAction = freezed,Object? statistics = null,Object? canEscape = null,Object? baseEscapeChance = null,Object? selectedEnemy = freezed,Object? targetedEnemy = freezed,Object? selectedCharacter = freezed,Object? currentActionPoints = null,Object? maxActionPoints = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currentPhase = null,Object? result = null,Object? turnNumber = null,Object? playerHasFirstTurn = null,Object? party = null,Object? enemy = null,Object? playerStatusManager = null,Object? enemyStatusManager = null,Object? enemyActionQueue = null,Object? currentEnemyActionIndex = null,Object? selectedEnemyAction = freezed,Object? statistics = null,Object? canEscape = null,Object? baseEscapeChance = null,Object? selectedEnemy = freezed,Object? targetedEnemy = freezed,Object? selectedCharacter = freezed,Object? currentActionPoints = null,Object? maxActionPoints = null,}) {
   return _then(_self.copyWith(
 currentPhase: null == currentPhase ? _self.currentPhase : currentPhase // ignore: cast_nullable_to_non_nullable
 as BattlePhase,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
 as BattleResult,turnNumber: null == turnNumber ? _self.turnNumber : turnNumber // ignore: cast_nullable_to_non_nullable
 as int,playerHasFirstTurn: null == playerHasFirstTurn ? _self.playerHasFirstTurn : playerHasFirstTurn // ignore: cast_nullable_to_non_nullable
-as bool,playerParty: null == playerParty ? _self.playerParty : playerParty // ignore: cast_nullable_to_non_nullable
-as List<Character>,enemy: null == enemy ? _self.enemy : enemy // ignore: cast_nullable_to_non_nullable
+as bool,party: null == party ? _self.party : party // ignore: cast_nullable_to_non_nullable
+as Party,enemy: null == enemy ? _self.enemy : enemy // ignore: cast_nullable_to_non_nullable
 as Enemy,playerStatusManager: null == playerStatusManager ? _self.playerStatusManager : playerStatusManager // ignore: cast_nullable_to_non_nullable
 as StatusEffectManager,enemyStatusManager: null == enemyStatusManager ? _self.enemyStatusManager : enemyStatusManager // ignore: cast_nullable_to_non_nullable
 as StatusEffectManager,enemyActionQueue: null == enemyActionQueue ? _self.enemyActionQueue : enemyActionQueue // ignore: cast_nullable_to_non_nullable
@@ -95,6 +95,15 @@ as int,
   ));
 }
 /// Create a copy of BattleState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PartyCopyWith<$Res> get party {
+  
+  return $PartyCopyWith<$Res>(_self.party, (value) {
+    return _then(_self.copyWith(party: value));
+  });
+}/// Create a copy of BattleState
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -242,10 +251,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BattlePhase currentPhase,  BattleResult result,  int turnNumber,  bool playerHasFirstTurn,  List<Character> playerParty,  Enemy enemy,  StatusEffectManager playerStatusManager,  StatusEffectManager enemyStatusManager,  List<EnemyAction> enemyActionQueue,  int currentEnemyActionIndex,  EnemyAction? selectedEnemyAction,  BattleStatistics statistics,  bool canEscape,  double baseEscapeChance,  Enemy? selectedEnemy,  Enemy? targetedEnemy,  Character? selectedCharacter,  int currentActionPoints,  int maxActionPoints)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BattlePhase currentPhase,  BattleResult result,  int turnNumber,  bool playerHasFirstTurn,  Party party,  Enemy enemy,  StatusEffectManager playerStatusManager,  StatusEffectManager enemyStatusManager,  List<EnemyAction> enemyActionQueue,  int currentEnemyActionIndex,  EnemyAction? selectedEnemyAction,  BattleStatistics statistics,  bool canEscape,  double baseEscapeChance,  Enemy? selectedEnemy,  Enemy? targetedEnemy,  Character? selectedCharacter,  int currentActionPoints,  int maxActionPoints)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BattleState() when $default != null:
-return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHasFirstTurn,_that.playerParty,_that.enemy,_that.playerStatusManager,_that.enemyStatusManager,_that.enemyActionQueue,_that.currentEnemyActionIndex,_that.selectedEnemyAction,_that.statistics,_that.canEscape,_that.baseEscapeChance,_that.selectedEnemy,_that.targetedEnemy,_that.selectedCharacter,_that.currentActionPoints,_that.maxActionPoints);case _:
+return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHasFirstTurn,_that.party,_that.enemy,_that.playerStatusManager,_that.enemyStatusManager,_that.enemyActionQueue,_that.currentEnemyActionIndex,_that.selectedEnemyAction,_that.statistics,_that.canEscape,_that.baseEscapeChance,_that.selectedEnemy,_that.targetedEnemy,_that.selectedCharacter,_that.currentActionPoints,_that.maxActionPoints);case _:
   return orElse();
 
 }
@@ -263,10 +272,10 @@ return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BattlePhase currentPhase,  BattleResult result,  int turnNumber,  bool playerHasFirstTurn,  List<Character> playerParty,  Enemy enemy,  StatusEffectManager playerStatusManager,  StatusEffectManager enemyStatusManager,  List<EnemyAction> enemyActionQueue,  int currentEnemyActionIndex,  EnemyAction? selectedEnemyAction,  BattleStatistics statistics,  bool canEscape,  double baseEscapeChance,  Enemy? selectedEnemy,  Enemy? targetedEnemy,  Character? selectedCharacter,  int currentActionPoints,  int maxActionPoints)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BattlePhase currentPhase,  BattleResult result,  int turnNumber,  bool playerHasFirstTurn,  Party party,  Enemy enemy,  StatusEffectManager playerStatusManager,  StatusEffectManager enemyStatusManager,  List<EnemyAction> enemyActionQueue,  int currentEnemyActionIndex,  EnemyAction? selectedEnemyAction,  BattleStatistics statistics,  bool canEscape,  double baseEscapeChance,  Enemy? selectedEnemy,  Enemy? targetedEnemy,  Character? selectedCharacter,  int currentActionPoints,  int maxActionPoints)  $default,) {final _that = this;
 switch (_that) {
 case _BattleState():
-return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHasFirstTurn,_that.playerParty,_that.enemy,_that.playerStatusManager,_that.enemyStatusManager,_that.enemyActionQueue,_that.currentEnemyActionIndex,_that.selectedEnemyAction,_that.statistics,_that.canEscape,_that.baseEscapeChance,_that.selectedEnemy,_that.targetedEnemy,_that.selectedCharacter,_that.currentActionPoints,_that.maxActionPoints);case _:
+return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHasFirstTurn,_that.party,_that.enemy,_that.playerStatusManager,_that.enemyStatusManager,_that.enemyActionQueue,_that.currentEnemyActionIndex,_that.selectedEnemyAction,_that.statistics,_that.canEscape,_that.baseEscapeChance,_that.selectedEnemy,_that.targetedEnemy,_that.selectedCharacter,_that.currentActionPoints,_that.maxActionPoints);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -283,10 +292,10 @@ return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BattlePhase currentPhase,  BattleResult result,  int turnNumber,  bool playerHasFirstTurn,  List<Character> playerParty,  Enemy enemy,  StatusEffectManager playerStatusManager,  StatusEffectManager enemyStatusManager,  List<EnemyAction> enemyActionQueue,  int currentEnemyActionIndex,  EnemyAction? selectedEnemyAction,  BattleStatistics statistics,  bool canEscape,  double baseEscapeChance,  Enemy? selectedEnemy,  Enemy? targetedEnemy,  Character? selectedCharacter,  int currentActionPoints,  int maxActionPoints)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BattlePhase currentPhase,  BattleResult result,  int turnNumber,  bool playerHasFirstTurn,  Party party,  Enemy enemy,  StatusEffectManager playerStatusManager,  StatusEffectManager enemyStatusManager,  List<EnemyAction> enemyActionQueue,  int currentEnemyActionIndex,  EnemyAction? selectedEnemyAction,  BattleStatistics statistics,  bool canEscape,  double baseEscapeChance,  Enemy? selectedEnemy,  Enemy? targetedEnemy,  Character? selectedCharacter,  int currentActionPoints,  int maxActionPoints)?  $default,) {final _that = this;
 switch (_that) {
 case _BattleState() when $default != null:
-return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHasFirstTurn,_that.playerParty,_that.enemy,_that.playerStatusManager,_that.enemyStatusManager,_that.enemyActionQueue,_that.currentEnemyActionIndex,_that.selectedEnemyAction,_that.statistics,_that.canEscape,_that.baseEscapeChance,_that.selectedEnemy,_that.targetedEnemy,_that.selectedCharacter,_that.currentActionPoints,_that.maxActionPoints);case _:
+return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHasFirstTurn,_that.party,_that.enemy,_that.playerStatusManager,_that.enemyStatusManager,_that.enemyActionQueue,_that.currentEnemyActionIndex,_that.selectedEnemyAction,_that.statistics,_that.canEscape,_that.baseEscapeChance,_that.selectedEnemy,_that.targetedEnemy,_that.selectedCharacter,_that.currentActionPoints,_that.maxActionPoints);case _:
   return null;
 
 }
@@ -298,7 +307,7 @@ return $default(_that.currentPhase,_that.result,_that.turnNumber,_that.playerHas
 
 
 class _BattleState implements BattleState {
-  const _BattleState({required this.currentPhase, required this.result, required this.turnNumber, required this.playerHasFirstTurn, required final  List<Character> playerParty, required this.enemy, required this.playerStatusManager, required this.enemyStatusManager, required final  List<EnemyAction> enemyActionQueue, required this.currentEnemyActionIndex, this.selectedEnemyAction = null, required this.statistics, required this.canEscape, required this.baseEscapeChance, this.selectedEnemy = null, this.targetedEnemy = null, this.selectedCharacter = null, this.currentActionPoints = 3, this.maxActionPoints = 3}): _playerParty = playerParty,_enemyActionQueue = enemyActionQueue;
+  const _BattleState({required this.currentPhase, required this.result, required this.turnNumber, required this.playerHasFirstTurn, required this.party, required this.enemy, required this.playerStatusManager, required this.enemyStatusManager, required final  List<EnemyAction> enemyActionQueue, required this.currentEnemyActionIndex, this.selectedEnemyAction = null, required this.statistics, required this.canEscape, required this.baseEscapeChance, this.selectedEnemy = null, this.targetedEnemy = null, this.selectedCharacter = null, this.currentActionPoints = 3, this.maxActionPoints = 3}): _enemyActionQueue = enemyActionQueue;
   
 
 // 基本戰鬥狀態
@@ -307,14 +316,7 @@ class _BattleState implements BattleState {
 @override final  int turnNumber;
 @override final  bool playerHasFirstTurn;
 // 參戰單位
- final  List<Character> _playerParty;
-// 參戰單位
-@override List<Character> get playerParty {
-  if (_playerParty is EqualUnmodifiableListView) return _playerParty;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_playerParty);
-}
-
+@override final  Party party;
 @override final  Enemy enemy;
 // 單個敵人
 // 狀態效果管理器
@@ -353,16 +355,16 @@ _$BattleStateCopyWith<_BattleState> get copyWith => __$BattleStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BattleState&&(identical(other.currentPhase, currentPhase) || other.currentPhase == currentPhase)&&(identical(other.result, result) || other.result == result)&&(identical(other.turnNumber, turnNumber) || other.turnNumber == turnNumber)&&(identical(other.playerHasFirstTurn, playerHasFirstTurn) || other.playerHasFirstTurn == playerHasFirstTurn)&&const DeepCollectionEquality().equals(other._playerParty, _playerParty)&&(identical(other.enemy, enemy) || other.enemy == enemy)&&(identical(other.playerStatusManager, playerStatusManager) || other.playerStatusManager == playerStatusManager)&&(identical(other.enemyStatusManager, enemyStatusManager) || other.enemyStatusManager == enemyStatusManager)&&const DeepCollectionEquality().equals(other._enemyActionQueue, _enemyActionQueue)&&(identical(other.currentEnemyActionIndex, currentEnemyActionIndex) || other.currentEnemyActionIndex == currentEnemyActionIndex)&&(identical(other.selectedEnemyAction, selectedEnemyAction) || other.selectedEnemyAction == selectedEnemyAction)&&(identical(other.statistics, statistics) || other.statistics == statistics)&&(identical(other.canEscape, canEscape) || other.canEscape == canEscape)&&(identical(other.baseEscapeChance, baseEscapeChance) || other.baseEscapeChance == baseEscapeChance)&&(identical(other.selectedEnemy, selectedEnemy) || other.selectedEnemy == selectedEnemy)&&(identical(other.targetedEnemy, targetedEnemy) || other.targetedEnemy == targetedEnemy)&&(identical(other.selectedCharacter, selectedCharacter) || other.selectedCharacter == selectedCharacter)&&(identical(other.currentActionPoints, currentActionPoints) || other.currentActionPoints == currentActionPoints)&&(identical(other.maxActionPoints, maxActionPoints) || other.maxActionPoints == maxActionPoints));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BattleState&&(identical(other.currentPhase, currentPhase) || other.currentPhase == currentPhase)&&(identical(other.result, result) || other.result == result)&&(identical(other.turnNumber, turnNumber) || other.turnNumber == turnNumber)&&(identical(other.playerHasFirstTurn, playerHasFirstTurn) || other.playerHasFirstTurn == playerHasFirstTurn)&&(identical(other.party, party) || other.party == party)&&(identical(other.enemy, enemy) || other.enemy == enemy)&&(identical(other.playerStatusManager, playerStatusManager) || other.playerStatusManager == playerStatusManager)&&(identical(other.enemyStatusManager, enemyStatusManager) || other.enemyStatusManager == enemyStatusManager)&&const DeepCollectionEquality().equals(other._enemyActionQueue, _enemyActionQueue)&&(identical(other.currentEnemyActionIndex, currentEnemyActionIndex) || other.currentEnemyActionIndex == currentEnemyActionIndex)&&(identical(other.selectedEnemyAction, selectedEnemyAction) || other.selectedEnemyAction == selectedEnemyAction)&&(identical(other.statistics, statistics) || other.statistics == statistics)&&(identical(other.canEscape, canEscape) || other.canEscape == canEscape)&&(identical(other.baseEscapeChance, baseEscapeChance) || other.baseEscapeChance == baseEscapeChance)&&(identical(other.selectedEnemy, selectedEnemy) || other.selectedEnemy == selectedEnemy)&&(identical(other.targetedEnemy, targetedEnemy) || other.targetedEnemy == targetedEnemy)&&(identical(other.selectedCharacter, selectedCharacter) || other.selectedCharacter == selectedCharacter)&&(identical(other.currentActionPoints, currentActionPoints) || other.currentActionPoints == currentActionPoints)&&(identical(other.maxActionPoints, maxActionPoints) || other.maxActionPoints == maxActionPoints));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,currentPhase,result,turnNumber,playerHasFirstTurn,const DeepCollectionEquality().hash(_playerParty),enemy,playerStatusManager,enemyStatusManager,const DeepCollectionEquality().hash(_enemyActionQueue),currentEnemyActionIndex,selectedEnemyAction,statistics,canEscape,baseEscapeChance,selectedEnemy,targetedEnemy,selectedCharacter,currentActionPoints,maxActionPoints]);
+int get hashCode => Object.hashAll([runtimeType,currentPhase,result,turnNumber,playerHasFirstTurn,party,enemy,playerStatusManager,enemyStatusManager,const DeepCollectionEquality().hash(_enemyActionQueue),currentEnemyActionIndex,selectedEnemyAction,statistics,canEscape,baseEscapeChance,selectedEnemy,targetedEnemy,selectedCharacter,currentActionPoints,maxActionPoints]);
 
 @override
 String toString() {
-  return 'BattleState(currentPhase: $currentPhase, result: $result, turnNumber: $turnNumber, playerHasFirstTurn: $playerHasFirstTurn, playerParty: $playerParty, enemy: $enemy, playerStatusManager: $playerStatusManager, enemyStatusManager: $enemyStatusManager, enemyActionQueue: $enemyActionQueue, currentEnemyActionIndex: $currentEnemyActionIndex, selectedEnemyAction: $selectedEnemyAction, statistics: $statistics, canEscape: $canEscape, baseEscapeChance: $baseEscapeChance, selectedEnemy: $selectedEnemy, targetedEnemy: $targetedEnemy, selectedCharacter: $selectedCharacter, currentActionPoints: $currentActionPoints, maxActionPoints: $maxActionPoints)';
+  return 'BattleState(currentPhase: $currentPhase, result: $result, turnNumber: $turnNumber, playerHasFirstTurn: $playerHasFirstTurn, party: $party, enemy: $enemy, playerStatusManager: $playerStatusManager, enemyStatusManager: $enemyStatusManager, enemyActionQueue: $enemyActionQueue, currentEnemyActionIndex: $currentEnemyActionIndex, selectedEnemyAction: $selectedEnemyAction, statistics: $statistics, canEscape: $canEscape, baseEscapeChance: $baseEscapeChance, selectedEnemy: $selectedEnemy, targetedEnemy: $targetedEnemy, selectedCharacter: $selectedCharacter, currentActionPoints: $currentActionPoints, maxActionPoints: $maxActionPoints)';
 }
 
 
@@ -373,11 +375,11 @@ abstract mixin class _$BattleStateCopyWith<$Res> implements $BattleStateCopyWith
   factory _$BattleStateCopyWith(_BattleState value, $Res Function(_BattleState) _then) = __$BattleStateCopyWithImpl;
 @override @useResult
 $Res call({
- BattlePhase currentPhase, BattleResult result, int turnNumber, bool playerHasFirstTurn, List<Character> playerParty, Enemy enemy, StatusEffectManager playerStatusManager, StatusEffectManager enemyStatusManager, List<EnemyAction> enemyActionQueue, int currentEnemyActionIndex, EnemyAction? selectedEnemyAction, BattleStatistics statistics, bool canEscape, double baseEscapeChance, Enemy? selectedEnemy, Enemy? targetedEnemy, Character? selectedCharacter, int currentActionPoints, int maxActionPoints
+ BattlePhase currentPhase, BattleResult result, int turnNumber, bool playerHasFirstTurn, Party party, Enemy enemy, StatusEffectManager playerStatusManager, StatusEffectManager enemyStatusManager, List<EnemyAction> enemyActionQueue, int currentEnemyActionIndex, EnemyAction? selectedEnemyAction, BattleStatistics statistics, bool canEscape, double baseEscapeChance, Enemy? selectedEnemy, Enemy? targetedEnemy, Character? selectedCharacter, int currentActionPoints, int maxActionPoints
 });
 
 
-@override $EnemyCopyWith<$Res> get enemy;@override $EnemyActionCopyWith<$Res>? get selectedEnemyAction;@override $BattleStatisticsCopyWith<$Res> get statistics;@override $EnemyCopyWith<$Res>? get selectedEnemy;@override $EnemyCopyWith<$Res>? get targetedEnemy;@override $CharacterCopyWith<$Res>? get selectedCharacter;
+@override $PartyCopyWith<$Res> get party;@override $EnemyCopyWith<$Res> get enemy;@override $EnemyActionCopyWith<$Res>? get selectedEnemyAction;@override $BattleStatisticsCopyWith<$Res> get statistics;@override $EnemyCopyWith<$Res>? get selectedEnemy;@override $EnemyCopyWith<$Res>? get targetedEnemy;@override $CharacterCopyWith<$Res>? get selectedCharacter;
 
 }
 /// @nodoc
@@ -390,14 +392,14 @@ class __$BattleStateCopyWithImpl<$Res>
 
 /// Create a copy of BattleState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? currentPhase = null,Object? result = null,Object? turnNumber = null,Object? playerHasFirstTurn = null,Object? playerParty = null,Object? enemy = null,Object? playerStatusManager = null,Object? enemyStatusManager = null,Object? enemyActionQueue = null,Object? currentEnemyActionIndex = null,Object? selectedEnemyAction = freezed,Object? statistics = null,Object? canEscape = null,Object? baseEscapeChance = null,Object? selectedEnemy = freezed,Object? targetedEnemy = freezed,Object? selectedCharacter = freezed,Object? currentActionPoints = null,Object? maxActionPoints = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currentPhase = null,Object? result = null,Object? turnNumber = null,Object? playerHasFirstTurn = null,Object? party = null,Object? enemy = null,Object? playerStatusManager = null,Object? enemyStatusManager = null,Object? enemyActionQueue = null,Object? currentEnemyActionIndex = null,Object? selectedEnemyAction = freezed,Object? statistics = null,Object? canEscape = null,Object? baseEscapeChance = null,Object? selectedEnemy = freezed,Object? targetedEnemy = freezed,Object? selectedCharacter = freezed,Object? currentActionPoints = null,Object? maxActionPoints = null,}) {
   return _then(_BattleState(
 currentPhase: null == currentPhase ? _self.currentPhase : currentPhase // ignore: cast_nullable_to_non_nullable
 as BattlePhase,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
 as BattleResult,turnNumber: null == turnNumber ? _self.turnNumber : turnNumber // ignore: cast_nullable_to_non_nullable
 as int,playerHasFirstTurn: null == playerHasFirstTurn ? _self.playerHasFirstTurn : playerHasFirstTurn // ignore: cast_nullable_to_non_nullable
-as bool,playerParty: null == playerParty ? _self._playerParty : playerParty // ignore: cast_nullable_to_non_nullable
-as List<Character>,enemy: null == enemy ? _self.enemy : enemy // ignore: cast_nullable_to_non_nullable
+as bool,party: null == party ? _self.party : party // ignore: cast_nullable_to_non_nullable
+as Party,enemy: null == enemy ? _self.enemy : enemy // ignore: cast_nullable_to_non_nullable
 as Enemy,playerStatusManager: null == playerStatusManager ? _self.playerStatusManager : playerStatusManager // ignore: cast_nullable_to_non_nullable
 as StatusEffectManager,enemyStatusManager: null == enemyStatusManager ? _self.enemyStatusManager : enemyStatusManager // ignore: cast_nullable_to_non_nullable
 as StatusEffectManager,enemyActionQueue: null == enemyActionQueue ? _self._enemyActionQueue : enemyActionQueue // ignore: cast_nullable_to_non_nullable
@@ -416,6 +418,15 @@ as int,
 }
 
 /// Create a copy of BattleState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PartyCopyWith<$Res> get party {
+  
+  return $PartyCopyWith<$Res>(_self.party, (value) {
+    return _then(_self.copyWith(party: value));
+  });
+}/// Create a copy of BattleState
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

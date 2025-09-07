@@ -3,14 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rouge_project/providers/party_provider.dart';
 import 'package:rouge_project/services/enemy_ai_service.dart';
 
+import '../core/interfaces/i_battle_service.dart';
 import '../models/battle/battle_state.dart';
 import '../models/character/character.dart';
 import '../models/enemy/enemy.dart';
+import '../models/party/party.dart';
 import '../models/skill/skill_execution_result.dart';
 import '../models/status/status_effect.dart';
-import '../services/battle_service.dart';
+import '../services/battle_service_impl.dart'; // 更新為實現類
 import '../services/enemy_action_service.dart';
 import '../services/status_service.dart';
+import '../shared/beans/battle/battle_configuration.dart';
 
 /// 戰鬥狀態管理 Provider (狀態機重構版)
 ///
@@ -19,14 +22,14 @@ import '../services/status_service.dart';
 /// - 統一推進戰鬥階段
 /// - 集中處理戰鬥結束邏輯
 class BattleNotifier extends StateNotifier<BattleState> {
-  final BattleService _battleService;
+  final IBattleService _battleService;
   final EnemyActionService _enemyActionService;
   final StatusService _statusService;
   final EnemyAIService _enemyAIService;
   final Ref ref; // 添加 ref 字段
 
   BattleNotifier({
-    required BattleService battleService,
+    required IBattleService battleService,
     required EnemyActionService enemyActionService,
     required StatusService statusService,
     required EnemyAIService enemyAIService,
@@ -43,23 +46,22 @@ class BattleNotifier extends StateNotifier<BattleState> {
 
     final enemy = enemies.first;
 
-    // 從 PartyProvider 獲取玩家隊伍，而不是使用空隊伍
+    // 從 PartyProvider 獲取玩家隊伍
     final party = ref.read(partyProvider);
-    final playerParty = party.characters;
 
-    print('BattleProvider: 開始戰鬥，玩家隊伍角色數: ${playerParty.length}');
-    for (final character in playerParty) {
+    print('BattleProvider: 開始戰鬥，玩家隊伍角色數: ${party.characters.length}');
+    for (final character in party.characters) {
       print(
         'BattleProvider: 隊伍角色 - ID: ${character.id}, 名稱: ${character.name}',
       );
     }
 
-    initializeBattle(playerParty: playerParty, enemy: enemy, canEscape: true);
+    initializeBattle(party: party, enemy: enemy, canEscape: true);
   }
 
-  /// 初始化戰鬥
+  /// 初始化戰鬥 - 修正參數名稱
   void initializeBattle({
-    required List<Character> playerParty,
+    required Party party, // 改為 Party 物件
     required Enemy enemy,
     bool canEscape = true,
   }) {
@@ -68,7 +70,7 @@ class BattleNotifier extends StateNotifier<BattleState> {
     // 生成敵人行動隊列
     final actionQueue = _enemyAIService.generateActionQueue(
       enemy: enemy,
-      playerParty: playerParty,
+      playerParty: party.characters, // 使用 party.characters
       turnNumber: 1,
     );
 
@@ -78,7 +80,7 @@ class BattleNotifier extends StateNotifier<BattleState> {
     );
 
     final battleConfig = BattleConfiguration(
-      playerParty: playerParty,
+      party: party, // 正確使用 Party 物件
       enemy: enemy,
       canEscape: canEscape,
     );
@@ -210,7 +212,6 @@ class BattleNotifier extends StateNotifier<BattleState> {
   }
 
   /// 執行敵人行動序列
-  /// 執行敵人行動序列
   void _executeEnemyActions() {
     print('戰鬥階段: 敵人執行行動');
 
@@ -248,20 +249,21 @@ class BattleNotifier extends StateNotifier<BattleState> {
 
     final battleEndResult = _battleService.checkBattleEnd(state);
 
-    switch (battleEndResult.result) {
-      case BattleResult.victory:
+    switch (battleEndResult.resultType) {
+      // 使用 resultType 而非 result
+      case 'victory':
         print('戰鬥結果: 玩家勝利');
         _handleVictory();
         break;
-      case BattleResult.defeat:
+      case 'defeat':
         print('戰鬥結果: 玩家失敗');
         _handleDefeat();
         break;
-      case BattleResult.escaped:
+      case 'escaped':
         print('戰鬥結果: 玩家逃跑');
         _handleEscape();
         break;
-      case BattleResult.ongoing:
+      case 'ongoing':
         // 不應該到達這裡
         print('警告: 戰鬥結束處理但結果為進行中');
         break;
@@ -424,11 +426,6 @@ class BattleNotifier extends StateNotifier<BattleState> {
     }
   }
 
-  /// 更新敵人狀態
-  void _updateEnemyState(Enemy newEnemy) {
-    state = state.copyWith(enemy: newEnemy);
-  }
-
   /// 重構後的執行方法
   void _executePlayerTurnStart() {
     print('戰鬥階段: 玩家回合開始');
@@ -452,11 +449,11 @@ class BattleNotifier extends StateNotifier<BattleState> {
     _processStatusEffects(isPlayer: false, timing: StatusTiming.turnStart);
   }
 
-  /// 準備下一回合
+  /// 準備下一回合 - 修正屬性名稱
   void _prepareNextTurn() {
     final newActionQueue = _enemyAIService.generateActionQueue(
       enemy: state.enemy,
-      playerParty: state.playerParty,
+      playerParty: state.party.characters, // 使用 party.characters
       turnNumber: state.turnNumber + 1,
     );
 
@@ -782,28 +779,16 @@ class BattleNotifier extends StateNotifier<BattleState> {
 /// 狀態效果觸發時機
 enum StatusTiming { turnStart, turnEnd }
 
-/// 戰鬥配置類
-class BattleConfiguration {
-  final List<Character> playerParty;
-  final Enemy enemy;
-  final bool canEscape;
-
-  const BattleConfiguration({
-    required this.playerParty,
-    required this.enemy,
-    this.canEscape = true,
-  });
-}
-
 /// 戰鬥 Provider 工廠
 final battleProvider = StateNotifierProvider<BattleNotifier, BattleState>((
   ref,
 ) {
   return BattleNotifier(
-    battleService: BattleService(),
+    battleService: BattleServiceImpl(),
+    // 使用實現類
     enemyActionService: EnemyActionService(),
     statusService: StatusService(),
     enemyAIService: EnemyAIService(),
-    ref: ref, // 傳入 ref
+    ref: ref,
   );
 });
