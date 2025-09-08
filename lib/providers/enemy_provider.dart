@@ -8,7 +8,7 @@ import '../shared/beans/enemy/enemy_encounter_result.dart';
 
 /// 敵人服務 Provider
 final enemyServiceProvider = Provider<IEnemyService>((ref) {
-  return EnemyServiceImpl.instance;
+  return EnemyServiceImpl();
 });
 
 /// 敵人系統初始化 Provider

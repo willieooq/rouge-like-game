@@ -16,7 +16,7 @@ class EndTurnButton extends ConsumerWidget {
     final party = ref.watch(partyProvider);
 
     // 只在玩家回合時顯示
-    if (!battleState.isPlayerTurn || !battleState.isBattleOngoing) {
+    if (!battleState!.isPlayerTurn || !battleState.isBattleOngoing) {
       return const SizedBox.shrink();
     }
 

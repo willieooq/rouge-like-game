@@ -15,12 +15,6 @@ import '../shared/beans/enemy/enemy_encounter_result.dart';
 
 /// 敵人服務實現
 class EnemyServiceImpl implements IEnemyService {
-  static EnemyServiceImpl? _instance;
-
-  static EnemyServiceImpl get instance => _instance ??= EnemyServiceImpl._();
-
-  EnemyServiceImpl._();
-
   List<EnemyData>? _enemyDataList;
   Map<String, dynamic>? _enemySkillsData;
   final Random _random = Random();

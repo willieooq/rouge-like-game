@@ -2,14 +2,19 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:rouge_project/core/interfaces/i_skill_service.dart';
 
 import '../core/interfaces/i_game_data_initialization_service.dart';
-import '../services/skill_service.dart';
 import '../services/status_service_impl.dart';
 
 /// 游戏数据初始化服务实现
 class GameDataInitializationServiceImpl
     implements IGameDataInitializationService {
+  final ISkillService _skillService;
+
+  GameDataInitializationServiceImpl({required ISkillService skillService})
+    : _skillService = skillService;
+
   bool _skillsLoaded = false;
   bool _statusTemplatesLoaded = false;
   bool _enemiesLoaded = false;
@@ -48,7 +53,7 @@ class GameDataInitializationServiceImpl
 
     print('载入技能数据...');
     try {
-      await SkillService.loadSkills();
+      await _skillService.loadSkills();
       _skillsLoaded = true;
       print('技能数据载入完成');
     } catch (e) {
