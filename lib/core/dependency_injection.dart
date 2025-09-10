@@ -9,10 +9,10 @@ import '../services/game_data_initialization_service_impl.dart';
 // === Service Implementations ===
 import '../services/skill_service_impl.dart';
 import '../services/status_service_impl.dart';
+// === Interfaces ===
 import 'interfaces/i_battle_service.dart';
 import 'interfaces/i_enemy_service.dart';
 import 'interfaces/i_game_data_initialization_service.dart';
-// === Interfaces ===
 import 'interfaces/i_skill_service.dart';
 import 'interfaces/i_status_service.dart';
 

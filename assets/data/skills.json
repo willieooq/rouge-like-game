@@ -98,8 +98,8 @@
     "isAOE": false,
     "defaultTarget": "enemy"
   },
-  "flame_burst": {
-    "id": "flame_burst",
+  "fireball": {
+    "id": "fireball",
     "name": "火焰爆發",
     "cost": 6,
     "damage": 200,
