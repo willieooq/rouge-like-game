@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rouge_project/screens/test_battle_screen.dart';
 
 import '../core/dependency_injection.dart';
+import 'battle_screen.dart';
 
 class MainMenuScreen extends ConsumerWidget {
   const MainMenuScreen({super.key});
@@ -31,7 +32,7 @@ class MainMenuScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const TestBattleScreen(),
+                      builder: (context) => const BattleScreen(),
                     ),
                   );
                 },
@@ -39,7 +40,23 @@ class MainMenuScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-
+            // 開始遊戲按鈕
+            SizedBox(
+              width: 200,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TestBattleScreen(),
+                    ),
+                  );
+                },
+                child: const Text('測試戰鬥', style: TextStyle(fontSize: 18)),
+              ),
+            ),
+            const SizedBox(height: 16),
             // 測試服務按鈕
             SizedBox(
               width: 200,

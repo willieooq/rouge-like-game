@@ -32,45 +32,6 @@
 //     _initializeBattle();
 //   }
 //
-//   // Future<void> _initializeBattle() async {
-//   //   try {
-//   //     // 初始化敵人服務
-//   //     await EnemyService.instance.initialize();
-//   //
-//   //     // 生成測試敵人遭遇 - 只生成一個敵人
-//   //     final enemies = EnemyService.instance.generateRandomEncounter(
-//   //       playerLevel: 1,
-//   //       maxEnemies: 1, // 只生成一個敵人
-//   //       eliteChance: 0.3,
-//   //       bossChance: 0.0,
-//   //     );
-//   //
-//   //     // 啟動戰鬥
-//   //     ref.read(battleProvider.notifier).startBattle(enemies);
-//   //   } catch (e) {
-//   //     print('初始化戰鬥失敗: $e');
-//   //     // 創建默認敵人作為後備
-//   //     final defaultEnemies = [
-//   //       Enemy(
-//   //         id: 'test_enemy',
-//   //         name: '測試敵人',
-//   //         type: EnemyType.normal,
-//   //         aiBehavior: AIBehavior.aggressive,
-//   //         maxHp: 50,
-//   //         currentHp: 50,
-//   //         attack: 10,
-//   //         defense: 2,
-//   //         speed: 8,
-//   //         iconPath: '',
-//   //         description: '用於測試的敵人',
-//   //         skillIds: [],
-//   //         expReward: 15,
-//   //         goldReward: 8,
-//   //       ),
-//   //     ];
-//   //     ref.read(battleProvider.notifier).startBattle(defaultEnemies);
-//   //   }
-//   // }
 //   Future<void> _initializeBattle() async {
 //     try {
 //       // 初始化敵人服務
